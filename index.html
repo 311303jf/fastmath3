@@ -4,689 +4,3927 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FASTMath3</title>
-
 <style>
 :root{
-  --bg:#f4f8ff;
-  --card:#ffffff;
-  --card2:#eef5ff;
-  --text:#102033;
-  --muted:#64748b;
-  --border:#dbeafe;
-  --primary:#2563eb;
-  --primary2:#1d4ed8;
-  --correct:#16a34a;
-  --wrong:#dc2626;
-  --nso:#2563eb;
-  --mult:#f97316;
-  --frac:#9333ea;
-  --geo:#0f766e;
-  --data:#eab308;
-  --full:#ef4444;
+  --bg:#f4f8ff; --card:#ffffff; --card2:#eef5ff; --text:#102033; --muted:#64748b;
+  --border:#dbeafe; --primary:#2563eb; --primary2:#1d4ed8; --correct:#16a34a; --wrong:#dc2626;
+  --nso:#2563eb; --mult:#f97316; --frac:#9333ea; --geo:#0f766e; --data:#eab308; --full:#ef4444;
 }
-
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:linear-gradient(180deg,#e0f2fe,#f8fafc);
-  color:var(--text);
-}
-
-.screen{display:none;min-height:100vh;padding:24px}
-.screen.active{display:block}
-
-.header{text-align:center;margin-top:35px}
-.header h1{
-  font-size:3rem;
-  margin:8px 0;
-  color:#1e3a8a;
-}
-.sub{color:var(--muted);font-size:.95rem}
-
-.student-panel{
-  max-width:900px;
-  margin:24px auto;
-}
-.student-box,.qcard,.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:22px;
-  box-shadow:0 10px 25px rgba(15,23,42,.08);
-}
-.student-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:12px;
-  margin-top:14px;
-}
-input{
-  padding:13px 14px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  font-size:1rem;
-}
-input:disabled{background:#e5e7eb;color:#94a3b8}
-
-.student-actions{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-top:14px;
-}
-
-.smallbtn,.btn,.next,.back{
-  border:0;
-  border-radius:999px;
-  background:var(--primary);
-  color:white;
-  font-weight:800;
-  padding:11px 18px;
-  cursor:pointer;
-}
-.smallbtn:hover,.btn:hover,.next:hover,.back:hover{background:var(--primary2)}
-.secondary{background:#64748b}
-
-.section-title{
-  max-width:1100px;
-  margin:30px auto 12px;
-  font-size:1.35rem;
-  font-weight:900;
-  color:#1e3a8a;
-}
-
-.grid{
-  max-width:1100px;
-  margin:auto;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:18px;
-}
-.fullrow{
-  max-width:1100px;
-  margin:auto;
-}
-
-.card{
-  border-top:8px solid var(--c);
-  cursor:pointer;
-  transition:.2s;
-}
-.card:hover{transform:translateY(-4px)}
-.icon{font-size:2.2rem}
-.tag{
-  display:inline-block;
-  margin-top:8px;
-  background:var(--card2);
-  color:var(--primary);
-  padding:5px 10px;
-  border-radius:999px;
-  font-weight:800;
-  font-size:.8rem;
-}
-.card h3{margin:12px 0 6px}
-.card p{color:var(--muted);min-height:55px}
-
-.quiz-head{
-  max-width:1000px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-.qtitle{font-size:1.4rem;font-weight:900}
-.counter{
-  background:white;
-  padding:8px 14px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  font-weight:900;
-}
-.prog{
-  max-width:1000px;
-  margin:18px auto;
-  height:14px;
-  background:#dbeafe;
-  border-radius:999px;
-  overflow:hidden;
-}
-.progfill{
-  height:100%;
-  width:0%;
-  background:var(--primary);
-}
-.body{max-width:1000px;margin:auto}
-.meta{
-  color:var(--muted);
-  font-weight:800;
-  margin-bottom:10px;
-}
-.qtext{
-  font-size:1.35rem;
-  font-weight:900;
-  line-height:1.4;
-}
-.hint{
-  margin-top:10px;
-  color:#0f766e;
-  font-weight:700;
-}
-
-.choices{
-  display:grid;
-  gap:12px;
-  margin-top:18px;
-}
-.choice{
-  background:white;
-  border:2px solid var(--border);
-  border-radius:18px;
-  padding:16px;
-  font-size:1.05rem;
-  text-align:left;
-  cursor:pointer;
-}
-.choice:hover{border-color:var(--primary)}
-.choice.correct{border-color:var(--correct);background:#dcfce7}
-.choice.wrong{border-color:var(--wrong);background:#fee2e2}
-.letter{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:30px;height:30px;
-  background:#dbeafe;
-  color:#1e3a8a;
-  border-radius:50%;
-  margin-right:12px;
-  font-weight:900;
-}
-
-.fb{
-  display:none;
-  margin-top:18px;
-  padding:16px;
-  border-radius:18px;
-  background:#eef5ff;
-}
-.fb.show{display:block}
-.fb strong{display:block;margin-bottom:6px}
-
-.nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:18px;
-}
-.results{
-  max-width:800px;
-  margin:50px auto;
-  text-align:center;
-}
-.big{
-  font-size:4rem;
-  font-weight:900;
-  color:var(--primary);
-}
-.save-status{
-  margin-top:15px;
-  padding:12px;
-  border-radius:14px;
-}
-.good{background:#dcfce7;color:#166534}
-.bad{background:#fee2e2;color:#991b1b}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#e0f2fe,#f8fafc);color:var(--text)}
+.screen{display:none;min-height:100vh;padding:24px} .screen.active{display:block}
+.header{text-align:center;margin-top:35px} .header h1{font-size:3rem;margin:8px 0;color:#1e3a8a} .sub{color:var(--muted);font-size:.95rem}
+.student-panel{max-width:900px;margin:24px auto} .student-box,.qcard,.card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:22px;box-shadow:0 10px 25px rgba(15,23,42,.08)}
+.student-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px}
+input{padding:13px 14px;border:1px solid var(--border);border-radius:14px;font-size:1rem} input:disabled{background:#e5e7eb;color:#94a3b8}
+.student-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.smallbtn,.btn,.next,.back{border:0;border-radius:999px;background:var(--primary);color:white;font-weight:800;padding:11px 18px;cursor:pointer}
+.smallbtn:hover,.btn:hover,.next:hover,.back:hover{background:var(--primary2)} .secondary{background:#64748b}
+.section-title{max-width:1100px;margin:30px auto 12px;font-size:1.35rem;font-weight:900;color:#1e3a8a}
+.grid{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px} .fullrow{max-width:1100px;margin:auto}
+.card{border-top:8px solid var(--c);cursor:pointer;transition:.2s} .card:hover{transform:translateY(-4px)} .icon{font-size:2.2rem}
+.tag{display:inline-block;margin-top:8px;background:var(--card2);color:var(--primary);padding:5px 10px;border-radius:999px;font-weight:800;font-size:.8rem}
+.card h3{margin:12px 0 6px} .card p{color:var(--muted);min-height:55px}
+.quiz-head{max-width:1000px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px} .qtitle{font-size:1.4rem;font-weight:900}
+.counter{background:white;padding:8px 14px;border-radius:999px;border:1px solid var(--border);font-weight:900}
+.prog{max-width:1000px;margin:18px auto;height:14px;background:#dbeafe;border-radius:999px;overflow:hidden} .progfill{height:100%;width:0%;background:var(--primary)}
+.body{max-width:1000px;margin:auto} .meta{color:var(--muted);font-weight:800;margin-bottom:10px} .qtext{font-size:1.35rem;font-weight:900;line-height:1.4} .hint{margin-top:10px;color:#0f766e;font-weight:700}
+.choices{display:grid;gap:12px;margin-top:18px} .choice{background:white;border:2px solid var(--border);border-radius:18px;padding:16px;font-size:1.05rem;text-align:left;cursor:pointer}
+.choice:hover{border-color:var(--primary)} .choice.correct{border-color:var(--correct);background:#dcfce7} .choice.wrong{border-color:var(--wrong);background:#fee2e2}
+.letter{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:#dbeafe;color:#1e3a8a;border-radius:50%;margin-right:12px;font-weight:900}
+.fb{display:none;margin-top:18px;padding:16px;border-radius:18px;background:#eef5ff} .fb.show{display:block} .fb strong{display:block;margin-bottom:6px}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:18px} .results{max-width:800px;margin:50px auto;text-align:center} .big{font-size:4rem;font-weight:900;color:var(--primary)}
+.save-status{margin-top:15px;padding:12px;border-radius:14px} .good{background:#dcfce7;color:#166534} .bad{background:#fee2e2;color:#991b1b}
+.practice-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:14px}
+.mini-btn{border:1px solid var(--border);background:#f8fafc;border-radius:16px;padding:12px;text-align:left;cursor:pointer;font-weight:800;color:#1e3a8a}
+.mini-btn:hover{background:#dbeafe}
 </style>
 </head>
-
 <body>
-
 <div id="home" class="screen active">
-
-  <button onclick="openTeacherPanel()" style="position:absolute;top:18px;right:18px;background:white;border:1px solid var(--border);color:var(--primary);border-radius:999px;padding:8px 14px;font-weight:900;cursor:pointer">
-    Teacher Panel
-  </button>
-
-  <div class="header">
-    <div style="font-size:2.8rem">🌴📘</div>
-    <h1>FASTMath3</h1>
-    <p class="sub">Florida FAST Math Practice · 3rd Grade</p>
-  </div>
-
-  <div class="student-panel">
-    <div class="student-box">
-      <b>Student Information Required</b>
-      <p class="sub">Demo Class Code: <b>DEMO3A</b></p>
-
-      <div class="student-grid">
-        <input id="classCode" placeholder="Class Code">
-      </div>
-
-      <div class="student-actions">
-        <button class="smallbtn" onclick="validateClassCode()">Validate Class Code</button>
-        <span id="classCodeCheckStatus" class="sub"></span>
-      </div>
-
-      <div class="student-grid" style="margin-top:12px">
-        <input id="firstName" placeholder="First Name" disabled>
-        <input id="lastName" placeholder="Last Name" disabled>
-        <input id="studentId" placeholder="Student ID" disabled>
-      </div>
-
-      <div class="student-actions">
-        <button class="smallbtn" onclick="saveStudentInfo()">Save Info / Start Ready</button>
-        <button class="smallbtn secondary" onclick="clearStudentInfo()">Clear</button>
-        <span id="studentStatus" class="sub"></span>
-      </div>
-    </div>
-  </div>
-
+  <button onclick="openTeacherPanel()" style="position:absolute;top:18px;right:18px;background:white;border:1px solid var(--border);color:var(--primary);border-radius:999px;padding:8px 14px;font-weight:900;cursor:pointer">Teacher Panel</button>
+  <div class="header"><div style="font-size:2.8rem">🌴📘</div><h1>FASTMath3</h1><p class="sub">Florida FAST Math Practice · 3rd Grade</p></div>
+  <div class="student-panel"><div class="student-box">
+    <b>Student Information Required</b><p class="sub">Demo Class Code: <b>DEMO3A</b></p>
+    <div class="student-grid"><input id="classCode" placeholder="Class Code"></div>
+    <div class="student-actions"><button class="smallbtn" onclick="validateClassCode()">Validate Class Code</button><span id="classCodeCheckStatus" class="sub"></span></div>
+    <div class="student-grid" style="margin-top:12px"><input id="firstName" placeholder="First Name" disabled><input id="lastName" placeholder="Last Name" disabled><input id="studentId" placeholder="Student ID" disabled></div>
+    <div class="student-actions"><button class="smallbtn" onclick="saveStudentInfo()">Save Info / Start Ready</button><button class="smallbtn secondary" onclick="clearStudentInfo()">Clear</button><span id="studentStatus" class="sub"></span></div>
+  </div></div>
   <div class="section-title">FASTMath3 Practice Domains</div>
-
   <div class="grid">
-    <div class="card" style="--c:var(--nso)" onclick="startQuiz('standard',0)">
-      <div class="icon">🔢</div>
-      <span class="tag">Practice</span>
-      <h3>Number Sense</h3>
-      <p>Place value, comparing numbers, rounding, addition and subtraction.</p>
-      <button class="btn">Start →</button>
-    </div>
-
-    <div class="card" style="--c:var(--mult)" onclick="startQuiz('standard',1)">
-      <div class="icon">✖️</div>
-      <span class="tag">Practice</span>
-      <h3>Multiplication & Division</h3>
-      <p>Equal groups, arrays, facts, and word problems.</p>
-      <button class="btn">Start →</button>
-    </div>
-
-    <div class="card" style="--c:var(--frac)" onclick="startQuiz('standard',2)">
-      <div class="icon">🍕</div>
-      <span class="tag">Practice</span>
-      <h3>Fractions</h3>
-      <p>Unit fractions, equivalent fractions, comparing fractions and number lines.</p>
-      <button class="btn">Start →</button>
-    </div>
-
-    <div class="card" style="--c:var(--geo)" onclick="startQuiz('standard',3)">
-      <div class="icon">📏</div>
-      <span class="tag">Practice</span>
-      <h3>Measurement & Geometry</h3>
-      <p>Area, perimeter, shapes, inches, feet, yards, and time.</p>
-      <button class="btn">Start →</button>
-    </div>
-
-    <div class="card" style="--c:var(--data)" onclick="startQuiz('standard',4)">
-      <div class="icon">📊</div>
-      <span class="tag">Practice</span>
-      <h3>Data & Graphs</h3>
-      <p>Tables, bar graphs, picture graphs, line plots and data questions.</p>
-      <button class="btn">Start →</button>
-    </div>
+    <div class="card" style="--c:var(--nso)" onclick="openPracticeMenu(0)"><div class="icon">🔢</div><span class="tag">5 Practices</span><h3>Number Sense</h3><p>Place value, comparing numbers, rounding, addition and subtraction.</p><button class="btn">Choose Practice →</button></div>
+    <div class="card" style="--c:var(--mult)" onclick="openPracticeMenu(1)"><div class="icon">✖️</div><span class="tag">5 Practices</span><h3>Multiplication & Division</h3><p>Equal groups, arrays, facts, and word problems.</p><button class="btn">Choose Practice →</button></div>
+    <div class="card" style="--c:var(--frac)" onclick="openPracticeMenu(2)"><div class="icon">🍕</div><span class="tag">5 Practices</span><h3>Fractions</h3><p>Unit fractions, equivalent fractions, comparing fractions and number lines.</p><button class="btn">Choose Practice →</button></div>
+    <div class="card" style="--c:var(--geo)" onclick="openPracticeMenu(3)"><div class="icon">📏</div><span class="tag">5 Practices</span><h3>Measurement & Geometry</h3><p>Area, perimeter, shapes, inches, feet, yards, and time.</p><button class="btn">Choose Practice →</button></div>
+    <div class="card" style="--c:var(--data)" onclick="openPracticeMenu(4)"><div class="icon">📊</div><span class="tag">5 Practices</span><h3>Data & Graphs</h3><p>Tables, bar graphs, picture graphs, line plots and data questions.</p><button class="btn">Choose Practice →</button></div>
   </div>
-
   <div class="section-title">Mock Test</div>
-  <div class="fullrow">
-    <div class="card" style="--c:var(--full)" onclick="startMock('standard')">
-      <div class="icon">🏆</div>
-      <span class="tag">FAST Simulation</span>
-      <h3>3rd Grade FAST Math Mock Test</h3>
-      <p>Mixed review with questions from all domains.</p>
-      <button class="btn">Start Mock →</button>
-    </div>
-  </div>
+  <div class="fullrow"><div class="card" style="--c:var(--full)" onclick="startMock('standard')"><div class="icon">🏆</div><span class="tag">FAST Simulation</span><h3>3rd Grade FAST Math Mock Test</h3><p>Mixed review with questions from all domains.</p><button class="btn">Start Mock →</button></div></div>
 </div>
 
 <div id="teacherPanel" class="screen">
-  <div class="quiz-head">
-    <button class="back" onclick="goHome()">← Home</button>
-    <div class="qtitle">Teacher/Admin Panel</div>
-  </div>
+  <div class="quiz-head"><button class="back" onclick="goHome()">← Home</button><div class="qtitle">Teacher/Admin Panel</div></div>
+  <div class="body"><div class="qcard"><div class="meta">Create Class Code</div>
+    <div class="student-grid"><input id="teacherName" placeholder="Teacher Name"><div style="display:flex;align-items:center;gap:8px"><span style="font-weight:900">Period-</span><input id="teacherPeriod" placeholder="Number Only"></div></div>
+    <div class="student-actions"><button class="smallbtn" onclick="createClassCode()">Generate 6-Letter Class Code</button></div>
+    <div id="classCodeStatus" class="save-status"></div><div id="teacherSessionCodes"></div>
+  </div></div>
+</div>
 
-  <div class="body">
-    <div class="qcard">
-      <div class="meta">Create Class Code</div>
-
-      <div class="student-grid">
-        <input id="teacherName" placeholder="Teacher Name">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-weight:900">Period-</span>
-          <input id="teacherPeriod" placeholder="Number Only">
-        </div>
-      </div>
-
-      <div class="student-actions">
-        <button class="smallbtn" onclick="createClassCode()">Generate 6-Letter Class Code</button>
-      </div>
-
-      <div id="classCodeStatus" class="save-status"></div>
-      <div id="teacherSessionCodes"></div>
-    </div>
-  </div>
+<div id="practiceMenu" class="screen">
+  <div class="quiz-head"><button class="back" onclick="goHome()">← Home</button><div class="qtitle" id="practiceMenuTitle">Practice Menu</div></div>
+  <div class="body"><div class="section-title">Choose a Practice</div><div class="grid" id="practiceButtons"></div></div>
 </div>
 
 <div id="quiz" class="screen">
-  <div class="quiz-head">
-    <button class="back" onclick="goHome()">← Home</button>
-    <div class="qtitle" id="qtitle">Quiz</div>
-    <div class="counter" id="counter">1 / 10</div>
-  </div>
-
+  <div class="quiz-head"><button class="back" onclick="goHome()">← Home</button><div class="qtitle" id="qtitle">Quiz</div><div class="counter" id="counter">1 / 10</div></div>
   <div class="prog"><div class="progfill" id="progfill"></div></div>
-
-  <div class="body">
-    <div class="qcard">
-      <div class="meta" id="meta"></div>
-      <div class="qtext" id="qtext"></div>
-      <div class="hint" id="hint"></div>
-    </div>
-
+  <div class="body"><div class="qcard"><div class="meta" id="meta"></div><div class="qtext" id="qtext"></div><div class="hint" id="hint"></div></div>
     <div class="choices" id="choices"></div>
-
-    <div class="fb" id="fb">
-      <strong id="fbtitle"></strong>
-      <span id="fbtext"></span>
-    </div>
-
-    <div class="nav">
-      <div id="live">Score: 0/0</div>
-      <button class="next" id="next" onclick="nextQuestion()" disabled>Next →</button>
-    </div>
+    <div class="fb" id="fb"><strong id="fbtitle"></strong><span id="fbtext"></span></div>
+    <div class="nav"><div id="live">Score: 0/0</div><button class="next" id="next" onclick="nextQuestion()" disabled>Next →</button></div>
   </div>
 </div>
 
 <div id="results" class="screen">
-  <div class="results">
-    <div style="font-size:5rem" id="emoji">🏆</div>
-    <h1 id="rtitle">Results</h1>
-    <div class="big" id="bigscore">0%</div>
-    <p class="sub" id="rsub"></p>
-    <div class="qcard" id="message"></div>
-    <div id="saveStatus" class="save-status"></div>
-    <button class="next" onclick="goHome()">🏠 Back to Home</button>
-  </div>
+  <div class="results"><div style="font-size:5rem" id="emoji">🏆</div><h1 id="rtitle">Results</h1><div class="big" id="bigscore">0%</div><p class="sub" id="rsub"></p><div class="qcard" id="message"></div><div id="saveStatus" class="save-status"></div><button class="next" onclick="goHome()">🏠 Back to Home</button></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 const SUPABASE_URL = 'YOUR_SUPABASE_URL';
 const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-
-const hasSupabase =
-  SUPABASE_URL &&
-  SUPABASE_KEY &&
-  !SUPABASE_URL.includes('YOUR_') &&
-  !SUPABASE_KEY.includes('YOUR_');
-
-const supabaseClient = hasSupabase
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-  : null;
+const hasSupabase = SUPABASE_URL && SUPABASE_KEY && !SUPABASE_URL.includes('YOUR_') && !SUPABASE_KEY.includes('YOUR_');
+const supabaseClient = hasSupabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 const BANKS = {
-  standard: [
-    [
-      {
-        text: "What is the value of the digit 7 in 4,732?",
-        choices: ["7", "70", "700", "7,000"],
-        answer: 2,
-        explain: "In 4,732, the 7 is in the hundreds place, so its value is 700.",
-        std: "MA.3.NSO.1",
-        domain: 0,
-        level: "Standard",
-        hint: "Look at the place value position."
-      },
-      {
-        text: "Which number is 3,000 + 400 + 20 + 6?",
-        choices: ["342", "3,426", "34,026", "3,246"],
-        answer: 1,
-        explain: "3,000 + 400 + 20 + 6 equals 3,426.",
-        std: "MA.3.NSO.1",
-        domain: 0,
-        level: "Standard",
-        hint: "Combine thousands, hundreds, tens, and ones."
-      },
-      {
-        text: "Which comparison is true?",
-        choices: ["5,231 < 5,132", "4,890 > 4,980", "6,105 > 6,015", "2,300 < 2,030"],
-        answer: 2,
-        explain: "6,105 is greater than 6,015 because 105 is greater than 015 after the thousands place.",
-        std: "MA.3.NSO.1",
-        domain: 0,
-        level: "Standard",
-        hint: "Compare from left to right."
-      },
-      {
-        text: "Round 3,684 to the nearest hundred.",
-        choices: ["3,600", "3,700", "3,800", "4,000"],
-        answer: 1,
-        explain: "The tens digit is 8, so round the hundreds digit up. 3,684 rounds to 3,700.",
-        std: "MA.3.NSO.1",
-        domain: 0,
-        level: "Standard",
-        hint: "Look at the tens digit."
-      },
-      {
-        text: "What is 527 + 348?",
-        choices: ["765", "875", "865", "885"],
-        answer: 1,
-        explain: "527 + 348 = 875.",
-        std: "MA.3.NSO.2",
-        domain: 0,
-        level: "Standard",
-        hint: "Add ones, tens, then hundreds."
-      }
-    ],
-    [
-      {
-        text: "Which equation matches 4 groups of 6?",
-        choices: ["4 + 6 = 10", "4 × 6 = 24", "6 - 4 = 2", "24 ÷ 4 = 8"],
-        answer: 1,
-        explain: "4 groups of 6 means 4 × 6 = 24.",
-        std: "MA.3.AR.1",
-        domain: 1,
-        level: "Standard",
-        hint: "Equal groups use multiplication."
-      },
-      {
-        text: "There are 5 rows of chairs. Each row has 7 chairs. How many chairs are there?",
-        choices: ["12", "25", "35", "57"],
-        answer: 2,
-        explain: "5 rows of 7 means 5 × 7 = 35.",
-        std: "MA.3.AR.1",
-        domain: 1,
-        level: "Standard",
-        hint: "Rows times chairs in each row."
-      },
-      {
-        text: "Which fact helps solve 36 ÷ 6?",
-        choices: ["6 × 6 = 36", "6 + 6 = 12", "36 - 6 = 30", "3 × 6 = 18"],
-        answer: 0,
-        explain: "Division and multiplication are related. Since 6 × 6 = 36, then 36 ÷ 6 = 6.",
-        std: "MA.3.AR.2",
-        domain: 1,
-        level: "Standard",
-        hint: "Think of the related multiplication fact."
-      },
-      {
-        text: "A teacher has 24 pencils and gives the same number to 4 students. How many pencils does each student get?",
-        choices: ["4", "5", "6", "8"],
-        answer: 2,
-        explain: "24 divided by 4 equals 6.",
-        std: "MA.3.AR.2",
-        domain: 1,
-        level: "Standard",
-        hint: "Share 24 into 4 equal groups."
-      },
-      {
-        text: "What is the missing number? 8 × ___ = 56",
-        choices: ["6", "7", "8", "9"],
-        answer: 1,
-        explain: "8 × 7 = 56.",
-        std: "MA.3.AR.1",
-        domain: 1,
-        level: "Standard",
-        hint: "Count by 8s."
-      }
-    ],
-    [
-      {
-        text: "Which fraction represents 1 part out of 4 equal parts?",
-        choices: ["1/2", "1/3", "1/4", "4/1"],
-        answer: 2,
-        explain: "One part out of four equal parts is 1/4.",
-        std: "MA.3.FR.1",
-        domain: 2,
-        level: "Standard",
-        hint: "The denominator tells the total equal parts."
-      },
-      {
-        text: "Which fraction is equivalent to 1/2?",
-        choices: ["1/3", "2/4", "3/5", "4/6"],
-        answer: 1,
-        explain: "2/4 is equivalent to 1/2 because both show one half.",
-        std: "MA.3.FR.2",
-        domain: 2,
-        level: "Standard",
-        hint: "Think of two equal parts and four equal parts."
-      },
-      {
-        text: "A number line from 0 to 1 is divided into 3 equal parts. What is the first mark after 0?",
-        choices: ["1/2", "1/3", "2/3", "3/3"],
-        answer: 1,
-        explain: "If the line is divided into thirds, the first mark is 1/3.",
-        std: "MA.3.FR.1",
-        domain: 2,
-        level: "Standard",
-        hint: "First mark means one part."
-      },
-      {
-        text: "Which fraction is greater?",
-        choices: ["1/6", "1/2", "They are equal", "Cannot compare"],
-        answer: 1,
-        explain: "1/2 is greater than 1/6 because half is larger than one sixth.",
-        std: "MA.3.FR.2",
-        domain: 2,
-        level: "Standard",
-        hint: "For unit fractions, smaller denominator means larger piece."
-      },
-      {
-        text: "Which is a unit fraction?",
-        choices: ["2/3", "3/4", "1/8", "4/4"],
-        answer: 2,
-        explain: "A unit fraction has numerator 1. So 1/8 is a unit fraction.",
-        std: "MA.3.FR.1",
-        domain: 2,
-        level: "Standard",
-        hint: "Look for numerator 1."
-      }
-    ],
-    [
-      {
-        text: "What is the perimeter of a rectangle with length 8 units and width 3 units?",
-        choices: ["11 units", "16 units", "22 units", "24 units"],
-        answer: 2,
-        explain: "Perimeter is the distance around. 8 + 3 + 8 + 3 = 22.",
-        std: "MA.3.GR.2",
-        domain: 3,
-        level: "Standard",
-        hint: "Add all sides."
-      },
-      {
-        text: "A rectangle has 4 rows and 5 columns of square tiles. What is its area?",
-        choices: ["9 square units", "10 square units", "20 square units", "25 square units"],
-        answer: 2,
-        explain: "Area is rows times columns. 4 × 5 = 20 square units.",
-        std: "MA.3.GR.2",
-        domain: 3,
-        level: "Standard",
-        hint: "Multiply rows by columns."
-      },
-      {
-        text: "Which unit would best measure the length of a pencil?",
-        choices: ["inches", "yards", "miles", "gallons"],
-        answer: 0,
-        explain: "A pencil is a small object, so inches is the best unit.",
-        std: "MA.3.M.1",
-        domain: 3,
-        level: "Standard",
-        hint: "Choose the unit for a small object."
-      },
-      {
-        text: "Which shape has 4 equal sides?",
-        choices: ["triangle", "square", "circle", "pentagon"],
-        answer: 1,
-        explain: "A square has 4 equal sides.",
-        std: "MA.3.GR.1",
-        domain: 3,
-        level: "Standard",
-        hint: "Think of a shape with all sides the same length."
-      },
-      {
-        text: "How many minutes are in 1 hour?",
-        choices: ["30", "45", "60", "100"],
-        answer: 2,
-        explain: "There are 60 minutes in 1 hour.",
-        std: "MA.3.M.1",
-        domain: 3,
-        level: "Standard",
-        hint: "Think about a clock."
-      }
-    ],
-    [
-      {
-        text: "A bar graph shows: Apples = 8, Oranges = 5. How many more apples than oranges?",
-        choices: ["2", "3", "5", "13"],
-        answer: 1,
-        explain: "8 - 5 = 3 more apples.",
-        std: "MA.3.DP.1",
-        domain: 4,
-        level: "Standard",
-        hint: "Find the difference."
-      },
-      {
-        text: "A picture graph key says each star = 2 students. If there are 4 stars, how many students is that?",
-        choices: ["4", "6", "8", "10"],
-        answer: 2,
-        explain: "4 stars × 2 students each = 8 students.",
-        std: "MA.3.DP.1",
-        domain: 4,
-        level: "Standard",
-        hint: "Use the key."
-      },
-      {
-        text: "A line plot shows 3 Xs above 5 inches. What does that mean?",
-        choices: ["5 students measured 3 inches", "3 objects measured 5 inches", "8 objects measured 5 inches", "The answer is 15"],
-        answer: 1,
-        explain: "Three Xs above 5 inches means 3 objects have a measurement of 5 inches.",
-        std: "MA.3.DP.1",
-        domain: 4,
-        level: "Standard",
-        hint: "Each X represents one object."
-      },
-      {
-        text: "Which question can be answered using a bar graph?",
-        choices: ["What is your name?", "Which fruit did most students choose?", "How do you spell apple?", "What color is math?"],
-        answer: 1,
-        explain: "A bar graph can show which category has the most votes.",
-        std: "MA.3.DP.1",
-        domain: 4,
-        level: "Standard",
-        hint: "Graphs compare categories."
-      },
-      {
-        text: "The table shows: Monday 6 books, Tuesday 9 books. How many books total?",
-        choices: ["3", "9", "12", "15"],
-        answer: 3,
-        explain: "6 + 9 = 15 books total.",
-        std: "MA.3.DP.1",
-        domain: 4,
-        level: "Standard",
-        hint: "Add the two days."
-      }
-    ]
+  "standard": [
+    {
+      "title": "Number Sense & Operations",
+      "practices": [
+        [
+          {
+            "text": "What is the value of the digit 7 in 4,732?",
+            "choices": [
+              "7",
+              "70",
+              "700",
+              "7,000"
+            ],
+            "answer": 2,
+            "explain": "The 7 is in the hundreds place, so its value is 700.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Look at the place value."
+          },
+          {
+            "text": "Which number is 3,000 + 400 + 20 + 6?",
+            "choices": [
+              "342",
+              "3,426",
+              "34,026",
+              "3,246"
+            ],
+            "answer": 1,
+            "explain": "3,000 + 400 + 20 + 6 equals 3,426.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Combine thousands, hundreds, tens, and ones."
+          },
+          {
+            "text": "What is the value of the digit 5 in 5,908?",
+            "choices": [
+              "5",
+              "50",
+              "500",
+              "5,000"
+            ],
+            "answer": 3,
+            "explain": "The 5 is in the thousands place, so its value is 5,000.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Find the digit's place."
+          },
+          {
+            "text": "Which number is written in expanded form as 6,000 + 200 + 30 + 9?",
+            "choices": [
+              "6,239",
+              "6,329",
+              "62,309",
+              "6,023"
+            ],
+            "answer": 0,
+            "explain": "6,000 + 200 + 30 + 9 equals 6,239.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Put the place values together."
+          },
+          {
+            "text": "Which number is greatest?",
+            "choices": [
+              "4,809",
+              "4,890",
+              "4,098",
+              "4,980"
+            ],
+            "answer": 3,
+            "explain": "4,980 is the greatest because it has the largest hundreds and tens compared to the others.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Compare from left to right."
+          },
+          {
+            "text": "Which number is least?",
+            "choices": [
+              "2,345",
+              "2,435",
+              "2,354",
+              "2,543"
+            ],
+            "answer": 0,
+            "explain": "2,345 is the least when comparing hundreds, tens, and ones.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Start comparing at the thousands place."
+          },
+          {
+            "text": "What is 400 + 30 + 8?",
+            "choices": [
+              "438",
+              "483",
+              "348",
+              "4,038"
+            ],
+            "answer": 0,
+            "explain": "400 + 30 + 8 equals 438.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Hundreds, tens, and ones."
+          },
+          {
+            "text": "Which is the standard form of seven thousand, two hundred six?",
+            "choices": [
+              "7,026",
+              "7,206",
+              "72,006",
+              "720"
+            ],
+            "answer": 1,
+            "explain": "Seven thousand, two hundred six is 7,206.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Listen for thousands and hundreds."
+          },
+          {
+            "text": "Which symbol makes this true? 3,456 ___ 3,465",
+            "choices": [
+              ">",
+              "<",
+              "=",
+              "+"
+            ],
+            "answer": 1,
+            "explain": "3,456 is less than 3,465.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Compare digit by digit."
+          },
+          {
+            "text": "Round 3,684 to the nearest hundred.",
+            "choices": [
+              "3,600",
+              "3,700",
+              "3,800",
+              "4,000"
+            ],
+            "answer": 1,
+            "explain": "The tens digit is 8, so round the hundreds digit up to 3,700.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Basic",
+            "hint": "Look at the tens digit."
+          }
+        ],
+        [
+          {
+            "text": "What is 527 + 348?",
+            "choices": [
+              "765",
+              "875",
+              "865",
+              "885"
+            ],
+            "answer": 1,
+            "explain": "527 + 348 = 875.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Add ones, tens, then hundreds."
+          },
+          {
+            "text": "What is 902 - 376?",
+            "choices": [
+              "526",
+              "536",
+              "626",
+              "586"
+            ],
+            "answer": 0,
+            "explain": "902 - 376 = 526.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Subtract carefully and regroup."
+          },
+          {
+            "text": "A library has 425 fiction books and 318 nonfiction books. How many books are there in all?",
+            "choices": [
+              "633",
+              "743",
+              "753",
+              "843"
+            ],
+            "answer": 1,
+            "explain": "425 + 318 = 743.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "In all means add."
+          },
+          {
+            "text": "A store had 850 pencils. It sold 275. How many pencils are left?",
+            "choices": [
+              "575",
+              "585",
+              "625",
+              "675"
+            ],
+            "answer": 0,
+            "explain": "850 - 275 = 575.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Left means subtract."
+          },
+          {
+            "text": "Round 6,249 to the nearest ten.",
+            "choices": [
+              "6,200",
+              "6,240",
+              "6,250",
+              "6,300"
+            ],
+            "answer": 2,
+            "explain": "The ones digit is 9, so 6,249 rounds to 6,250.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Look at the ones digit."
+          },
+          {
+            "text": "Round 8,517 to the nearest thousand.",
+            "choices": [
+              "8,000",
+              "8,500",
+              "9,000",
+              "8,600"
+            ],
+            "answer": 2,
+            "explain": "The hundreds digit is 5, so round 8,517 to 9,000.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Look at the hundreds digit."
+          },
+          {
+            "text": "Which expression has a value of 1,000?",
+            "choices": [
+              "700 + 200",
+              "450 + 550",
+              "900 - 200",
+              "800 + 300"
+            ],
+            "answer": 1,
+            "explain": "450 + 550 = 1,000.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Solve each expression."
+          },
+          {
+            "text": "What is the missing number? 650 + ___ = 1,000",
+            "choices": [
+              "250",
+              "350",
+              "450",
+              "550"
+            ],
+            "answer": 1,
+            "explain": "650 + 350 = 1,000.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Count up from 650 to 1,000."
+          },
+          {
+            "text": "Which estimate is closest to 389 + 412?",
+            "choices": [
+              "700",
+              "800",
+              "900",
+              "1,000"
+            ],
+            "answer": 1,
+            "explain": "389 is about 400 and 412 is about 400, so the sum is about 800.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Round before adding."
+          },
+          {
+            "text": "Which estimate is closest to 721 - 296?",
+            "choices": [
+              "300",
+              "400",
+              "500",
+              "600"
+            ],
+            "answer": 1,
+            "explain": "721 is about 700 and 296 is about 300, so 700 - 300 = 400.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Intermediate",
+            "hint": "Round before subtracting."
+          }
+        ],
+        [
+          {
+            "text": "A school collected 1,248 cans in March and 1,376 cans in April. How many cans did they collect altogether?",
+            "choices": [
+              "2,514",
+              "2,524",
+              "2,624",
+              "2,724"
+            ],
+            "answer": 2,
+            "explain": "1,248 + 1,376 = 2,624.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Altogether means add."
+          },
+          {
+            "text": "Jada had 2,000 stickers. She gave away 638. How many stickers does she have now?",
+            "choices": [
+              "1,262",
+              "1,362",
+              "1,462",
+              "1,572"
+            ],
+            "answer": 1,
+            "explain": "2,000 - 638 = 1,362.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Regroup across zeros carefully."
+          },
+          {
+            "text": "Which number rounds to 4,600 when rounded to the nearest hundred?",
+            "choices": [
+              "4,549",
+              "4,561",
+              "4,649",
+              "4,699"
+            ],
+            "answer": 1,
+            "explain": "4,561 rounds to 4,600 because the tens digit is 6.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Check each number."
+          },
+          {
+            "text": "Which statement is true?",
+            "choices": [
+              "7,908 < 7,890",
+              "5,430 > 5,403",
+              "6,111 < 6,011",
+              "9,099 = 9,909"
+            ],
+            "answer": 1,
+            "explain": "5,430 is greater than 5,403.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Compare digit by digit."
+          },
+          {
+            "text": "What is 3,456 + 2,789?",
+            "choices": [
+              "6,145",
+              "6,245",
+              "6,345",
+              "6,255"
+            ],
+            "answer": 1,
+            "explain": "3,456 + 2,789 = 6,245.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 5,004 - 2,786?",
+            "choices": [
+              "2,118",
+              "2,218",
+              "2,318",
+              "3,218"
+            ],
+            "answer": 1,
+            "explain": "5,004 - 2,786 = 2,218.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Subtract and regroup."
+          },
+          {
+            "text": "A number has 6 thousands, 0 hundreds, 8 tens, and 3 ones. What is the number?",
+            "choices": [
+              "6,083",
+              "6,803",
+              "6,830",
+              "608"
+            ],
+            "answer": 0,
+            "explain": "The number is 6,083.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Write each digit in its place."
+          },
+          {
+            "text": "Which expression equals 7,305?",
+            "choices": [
+              "7,000 + 300 + 5",
+              "7,000 + 30 + 5",
+              "700 + 300 + 5",
+              "7,000 + 300 + 50"
+            ],
+            "answer": 0,
+            "explain": "7,305 = 7,000 + 300 + 5.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Notice there are 0 tens."
+          },
+          {
+            "text": "A farmer picked 3,250 oranges. He packed 1,875 into boxes. How many oranges were not packed?",
+            "choices": [
+              "1,275",
+              "1,375",
+              "1,475",
+              "1,575"
+            ],
+            "answer": 1,
+            "explain": "3,250 - 1,875 = 1,375.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Not packed means subtract."
+          },
+          {
+            "text": "Which number is 100 more than 4,908?",
+            "choices": [
+              "4,918",
+              "5,008",
+              "5,908",
+              "4,808"
+            ],
+            "answer": 1,
+            "explain": "100 more than 4,908 is 5,008.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "FAST Ready",
+            "hint": "Add 100."
+          }
+        ],
+        [
+          {
+            "text": "Liam read 236 pages in one week and 178 pages the next week. About how many pages did he read in all?",
+            "choices": [
+              "300",
+              "400",
+              "500",
+              "600"
+            ],
+            "answer": 1,
+            "explain": "236 is about 200 and 178 is about 200, so about 400 pages.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Estimate using rounding."
+          },
+          {
+            "text": "A stadium has 4,250 seats. If 3,985 seats are filled, about how many seats are empty?",
+            "choices": [
+              "100",
+              "300",
+              "500",
+              "700"
+            ],
+            "answer": 1,
+            "explain": "4,250 - 3,985 is about 300.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Use compatible estimates."
+          },
+          {
+            "text": "Mia says 6,402 is greater than 6,420. Is she correct?",
+            "choices": [
+              "Yes, because 402 is greater than 420",
+              "Yes, because both have 6 thousands",
+              "No, because 6,420 is greater",
+              "No, because 6,402 has more tens"
+            ],
+            "answer": 2,
+            "explain": "6,420 is greater than 6,402 because 2 tens is greater than 0 tens.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Compare place values."
+          },
+          {
+            "text": "A number rounds to 7,000 to the nearest thousand. Which could be the number?",
+            "choices": [
+              "6,421",
+              "7,412",
+              "7,912",
+              "8,501"
+            ],
+            "answer": 1,
+            "explain": "7,412 rounds to 7,000 because the hundreds digit is 4.",
+            "std": "MA.3.NSO.1",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "To round to 7,000, the number should be near 7,000."
+          },
+          {
+            "text": "What is 785 + 230?",
+            "choices": [
+              "1005",
+              "1015",
+              "1025",
+              "1115"
+            ],
+            "answer": 1,
+            "explain": "785 + 230 = 1015.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 822 + 251?",
+            "choices": [
+              "1063",
+              "1073",
+              "1083",
+              "1173"
+            ],
+            "answer": 1,
+            "explain": "822 + 251 = 1073.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 859 + 272?",
+            "choices": [
+              "1121",
+              "1131",
+              "1141",
+              "1231"
+            ],
+            "answer": 1,
+            "explain": "859 + 272 = 1131.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 896 + 293?",
+            "choices": [
+              "1179",
+              "1189",
+              "1199",
+              "1289"
+            ],
+            "answer": 1,
+            "explain": "896 + 293 = 1189.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 933 + 314?",
+            "choices": [
+              "1237",
+              "1247",
+              "1257",
+              "1347"
+            ],
+            "answer": 1,
+            "explain": "933 + 314 = 1247.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 970 + 335?",
+            "choices": [
+              "1295",
+              "1305",
+              "1315",
+              "1405"
+            ],
+            "answer": 1,
+            "explain": "970 + 335 = 1305.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Applied Problems",
+            "hint": "Line up place values."
+          }
+        ],
+        [
+          {
+            "text": "What is 737 + 146?",
+            "choices": [
+              "873",
+              "883",
+              "893",
+              "983"
+            ],
+            "answer": 1,
+            "explain": "737 + 146 = 883.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 774 + 167?",
+            "choices": [
+              "931",
+              "941",
+              "951",
+              "1041"
+            ],
+            "answer": 1,
+            "explain": "774 + 167 = 941.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 811 + 188?",
+            "choices": [
+              "989",
+              "999",
+              "1009",
+              "1099"
+            ],
+            "answer": 1,
+            "explain": "811 + 188 = 999.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 848 + 209?",
+            "choices": [
+              "1047",
+              "1057",
+              "1067",
+              "1157"
+            ],
+            "answer": 1,
+            "explain": "848 + 209 = 1057.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 885 + 230?",
+            "choices": [
+              "1105",
+              "1115",
+              "1125",
+              "1215"
+            ],
+            "answer": 1,
+            "explain": "885 + 230 = 1115.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 922 + 251?",
+            "choices": [
+              "1163",
+              "1173",
+              "1183",
+              "1273"
+            ],
+            "answer": 1,
+            "explain": "922 + 251 = 1173.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 959 + 272?",
+            "choices": [
+              "1221",
+              "1231",
+              "1241",
+              "1331"
+            ],
+            "answer": 1,
+            "explain": "959 + 272 = 1231.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 996 + 293?",
+            "choices": [
+              "1279",
+              "1289",
+              "1299",
+              "1389"
+            ],
+            "answer": 1,
+            "explain": "996 + 293 = 1289.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 1033 + 314?",
+            "choices": [
+              "1337",
+              "1347",
+              "1357",
+              "1447"
+            ],
+            "answer": 1,
+            "explain": "1033 + 314 = 1347.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          },
+          {
+            "text": "What is 1070 + 335?",
+            "choices": [
+              "1395",
+              "1405",
+              "1415",
+              "1505"
+            ],
+            "answer": 1,
+            "explain": "1070 + 335 = 1405.",
+            "std": "MA.3.NSO.2",
+            "domain": 0,
+            "level": "Mastery Check",
+            "hint": "Line up place values."
+          }
+        ]
+      ]
+    },
+    {
+      "title": "Multiplication & Division",
+      "practices": [
+        [
+          {
+            "text": "What is 3 \u00d7 4?",
+            "choices": [
+              "10",
+              "12",
+              "14",
+              "7"
+            ],
+            "answer": 1,
+            "explain": "3 \u00d7 4 = 12.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 5 \u00d7 6?",
+            "choices": [
+              "28",
+              "30",
+              "32",
+              "11"
+            ],
+            "answer": 1,
+            "explain": "5 \u00d7 6 = 30.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 7 \u00d7 8?",
+            "choices": [
+              "54",
+              "56",
+              "58",
+              "15"
+            ],
+            "answer": 1,
+            "explain": "7 \u00d7 8 = 56.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 9 \u00d7 4?",
+            "choices": [
+              "34",
+              "36",
+              "38",
+              "13"
+            ],
+            "answer": 1,
+            "explain": "9 \u00d7 4 = 36.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 6 \u00d7 6?",
+            "choices": [
+              "34",
+              "36",
+              "38",
+              "12"
+            ],
+            "answer": 1,
+            "explain": "6 \u00d7 6 = 36.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 8 \u00d7 3?",
+            "choices": [
+              "22",
+              "24",
+              "26",
+              "11"
+            ],
+            "answer": 1,
+            "explain": "8 \u00d7 3 = 24.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 2 \u00d7 9?",
+            "choices": [
+              "16",
+              "18",
+              "20",
+              "11"
+            ],
+            "answer": 1,
+            "explain": "2 \u00d7 9 = 18.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 7 \u00d7 5?",
+            "choices": [
+              "33",
+              "35",
+              "37",
+              "12"
+            ],
+            "answer": 1,
+            "explain": "7 \u00d7 5 = 35.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 4 \u00d7 8?",
+            "choices": [
+              "30",
+              "32",
+              "34",
+              "12"
+            ],
+            "answer": 1,
+            "explain": "4 \u00d7 8 = 32.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 6 \u00d7 9?",
+            "choices": [
+              "52",
+              "54",
+              "56",
+              "15"
+            ],
+            "answer": 1,
+            "explain": "6 \u00d7 9 = 54.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Basic",
+            "hint": "Use multiplication facts."
+          }
+        ],
+        [
+          {
+            "text": "What is 3 \u00d7 4?",
+            "choices": [
+              "10",
+              "12",
+              "14",
+              "7"
+            ],
+            "answer": 1,
+            "explain": "3 \u00d7 4 = 12.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 5 \u00d7 6?",
+            "choices": [
+              "28",
+              "30",
+              "32",
+              "11"
+            ],
+            "answer": 1,
+            "explain": "5 \u00d7 6 = 30.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 7 \u00d7 8?",
+            "choices": [
+              "54",
+              "56",
+              "58",
+              "15"
+            ],
+            "answer": 1,
+            "explain": "7 \u00d7 8 = 56.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 9 \u00d7 4?",
+            "choices": [
+              "34",
+              "36",
+              "38",
+              "13"
+            ],
+            "answer": 1,
+            "explain": "9 \u00d7 4 = 36.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 6 \u00d7 6?",
+            "choices": [
+              "34",
+              "36",
+              "38",
+              "12"
+            ],
+            "answer": 1,
+            "explain": "6 \u00d7 6 = 36.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 8 \u00d7 3?",
+            "choices": [
+              "22",
+              "24",
+              "26",
+              "11"
+            ],
+            "answer": 1,
+            "explain": "8 \u00d7 3 = 24.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 2 \u00d7 9?",
+            "choices": [
+              "16",
+              "18",
+              "20",
+              "11"
+            ],
+            "answer": 1,
+            "explain": "2 \u00d7 9 = 18.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 7 \u00d7 5?",
+            "choices": [
+              "33",
+              "35",
+              "37",
+              "12"
+            ],
+            "answer": 1,
+            "explain": "7 \u00d7 5 = 35.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 4 \u00d7 8?",
+            "choices": [
+              "30",
+              "32",
+              "34",
+              "12"
+            ],
+            "answer": 1,
+            "explain": "4 \u00d7 8 = 32.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          },
+          {
+            "text": "What is 6 \u00d7 9?",
+            "choices": [
+              "52",
+              "54",
+              "56",
+              "15"
+            ],
+            "answer": 1,
+            "explain": "6 \u00d7 9 = 54.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Intermediate",
+            "hint": "Use multiplication facts."
+          }
+        ],
+        [
+          {
+            "text": "What is 12 \u00f7 4?",
+            "choices": [
+              "2",
+              "3",
+              "4",
+              "4"
+            ],
+            "answer": 1,
+            "explain": "12 \u00f7 4 = 3 because 4 \u00d7 3 = 12.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 30 \u00f7 6?",
+            "choices": [
+              "4",
+              "5",
+              "6",
+              "6"
+            ],
+            "answer": 1,
+            "explain": "30 \u00f7 6 = 5 because 6 \u00d7 5 = 30.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 56 \u00f7 8?",
+            "choices": [
+              "6",
+              "7",
+              "8",
+              "8"
+            ],
+            "answer": 1,
+            "explain": "56 \u00f7 8 = 7 because 8 \u00d7 7 = 56.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 36 \u00f7 4?",
+            "choices": [
+              "8",
+              "9",
+              "10",
+              "4"
+            ],
+            "answer": 1,
+            "explain": "36 \u00f7 4 = 9 because 4 \u00d7 9 = 36.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 36 \u00f7 6?",
+            "choices": [
+              "5",
+              "6",
+              "7",
+              "6"
+            ],
+            "answer": 1,
+            "explain": "36 \u00f7 6 = 6 because 6 \u00d7 6 = 36.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 24 \u00f7 3?",
+            "choices": [
+              "7",
+              "8",
+              "9",
+              "3"
+            ],
+            "answer": 1,
+            "explain": "24 \u00f7 3 = 8 because 3 \u00d7 8 = 24.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 18 \u00f7 9?",
+            "choices": [
+              "1",
+              "2",
+              "3",
+              "9"
+            ],
+            "answer": 1,
+            "explain": "18 \u00f7 9 = 2 because 9 \u00d7 2 = 18.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 35 \u00f7 5?",
+            "choices": [
+              "6",
+              "7",
+              "8",
+              "5"
+            ],
+            "answer": 1,
+            "explain": "35 \u00f7 5 = 7 because 5 \u00d7 7 = 35.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 32 \u00f7 8?",
+            "choices": [
+              "3",
+              "4",
+              "5",
+              "8"
+            ],
+            "answer": 1,
+            "explain": "32 \u00f7 8 = 4 because 8 \u00d7 4 = 32.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          },
+          {
+            "text": "What is 54 \u00f7 9?",
+            "choices": [
+              "5",
+              "6",
+              "7",
+              "9"
+            ],
+            "answer": 1,
+            "explain": "54 \u00f7 9 = 6 because 9 \u00d7 6 = 54.",
+            "std": "MA.3.AR.2",
+            "domain": 1,
+            "level": "FAST Ready",
+            "hint": "Think multiplication backwards."
+          }
+        ],
+        [
+          {
+            "text": "There are 3 bags with 4 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "12",
+              "15",
+              "8",
+              "7"
+            ],
+            "answer": 0,
+            "explain": "3 groups of 4 means 3 \u00d7 4 = 12.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 5 bags with 6 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "30",
+              "35",
+              "24",
+              "11"
+            ],
+            "answer": 0,
+            "explain": "5 groups of 6 means 5 \u00d7 6 = 30.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 7 bags with 8 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "56",
+              "63",
+              "48",
+              "15"
+            ],
+            "answer": 0,
+            "explain": "7 groups of 8 means 7 \u00d7 8 = 56.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 9 bags with 4 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "36",
+              "45",
+              "32",
+              "13"
+            ],
+            "answer": 0,
+            "explain": "9 groups of 4 means 9 \u00d7 4 = 36.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 6 bags with 6 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "36",
+              "42",
+              "30",
+              "12"
+            ],
+            "answer": 0,
+            "explain": "6 groups of 6 means 6 \u00d7 6 = 36.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 8 bags with 3 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "24",
+              "32",
+              "21",
+              "11"
+            ],
+            "answer": 0,
+            "explain": "8 groups of 3 means 8 \u00d7 3 = 24.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 2 bags with 9 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "18",
+              "20",
+              "9",
+              "11"
+            ],
+            "answer": 0,
+            "explain": "2 groups of 9 means 2 \u00d7 9 = 18.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 7 bags with 5 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "35",
+              "42",
+              "30",
+              "12"
+            ],
+            "answer": 0,
+            "explain": "7 groups of 5 means 7 \u00d7 5 = 35.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 4 bags with 8 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "32",
+              "36",
+              "24",
+              "12"
+            ],
+            "answer": 0,
+            "explain": "4 groups of 8 means 4 \u00d7 8 = 32.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 6 bags with 9 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "54",
+              "60",
+              "45",
+              "15"
+            ],
+            "answer": 0,
+            "explain": "6 groups of 9 means 6 \u00d7 9 = 54.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Applied Problems",
+            "hint": "Equal groups mean multiply."
+          }
+        ],
+        [
+          {
+            "text": "There are 3 bags with 4 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "12",
+              "15",
+              "8",
+              "7"
+            ],
+            "answer": 0,
+            "explain": "3 groups of 4 means 3 \u00d7 4 = 12.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 5 bags with 6 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "30",
+              "35",
+              "24",
+              "11"
+            ],
+            "answer": 0,
+            "explain": "5 groups of 6 means 5 \u00d7 6 = 30.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 7 bags with 8 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "56",
+              "63",
+              "48",
+              "15"
+            ],
+            "answer": 0,
+            "explain": "7 groups of 8 means 7 \u00d7 8 = 56.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 9 bags with 4 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "36",
+              "45",
+              "32",
+              "13"
+            ],
+            "answer": 0,
+            "explain": "9 groups of 4 means 9 \u00d7 4 = 36.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 6 bags with 6 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "36",
+              "42",
+              "30",
+              "12"
+            ],
+            "answer": 0,
+            "explain": "6 groups of 6 means 6 \u00d7 6 = 36.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 8 bags with 3 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "24",
+              "32",
+              "21",
+              "11"
+            ],
+            "answer": 0,
+            "explain": "8 groups of 3 means 8 \u00d7 3 = 24.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 2 bags with 9 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "18",
+              "20",
+              "9",
+              "11"
+            ],
+            "answer": 0,
+            "explain": "2 groups of 9 means 2 \u00d7 9 = 18.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 7 bags with 5 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "35",
+              "42",
+              "30",
+              "12"
+            ],
+            "answer": 0,
+            "explain": "7 groups of 5 means 7 \u00d7 5 = 35.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 4 bags with 8 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "32",
+              "36",
+              "24",
+              "12"
+            ],
+            "answer": 0,
+            "explain": "4 groups of 8 means 4 \u00d7 8 = 32.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          },
+          {
+            "text": "There are 6 bags with 9 marbles in each bag. How many marbles are there?",
+            "choices": [
+              "54",
+              "60",
+              "45",
+              "15"
+            ],
+            "answer": 0,
+            "explain": "6 groups of 9 means 6 \u00d7 9 = 54.",
+            "std": "MA.3.AR.1",
+            "domain": 1,
+            "level": "Mastery Check",
+            "hint": "Equal groups mean multiply."
+          }
+        ]
+      ]
+    },
+    {
+      "title": "Fractions & Number Lines",
+      "practices": [
+        [
+          {
+            "text": "Which fraction shows 1 part(s) out of 2 equal parts?",
+            "choices": [
+              "1/2",
+              "2/1",
+              "1/3",
+              "2/2"
+            ],
+            "answer": 0,
+            "explain": "1 out of 2 equal parts is 1/2.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 1 part(s) out of 3 equal parts?",
+            "choices": [
+              "1/3",
+              "3/1",
+              "1/4",
+              "2/3"
+            ],
+            "answer": 0,
+            "explain": "1 out of 3 equal parts is 1/3.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 1 part(s) out of 4 equal parts?",
+            "choices": [
+              "1/4",
+              "4/1",
+              "1/5",
+              "2/4"
+            ],
+            "answer": 0,
+            "explain": "1 out of 4 equal parts is 1/4.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 2 part(s) out of 4 equal parts?",
+            "choices": [
+              "2/4",
+              "4/2",
+              "1/5",
+              "3/4"
+            ],
+            "answer": 0,
+            "explain": "2 out of 4 equal parts is 2/4.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 3 part(s) out of 6 equal parts?",
+            "choices": [
+              "3/6",
+              "6/3",
+              "1/7",
+              "4/6"
+            ],
+            "answer": 0,
+            "explain": "3 out of 6 equal parts is 3/6.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 1 part(s) out of 6 equal parts?",
+            "choices": [
+              "1/6",
+              "6/1",
+              "1/7",
+              "2/6"
+            ],
+            "answer": 0,
+            "explain": "1 out of 6 equal parts is 1/6.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 2 part(s) out of 3 equal parts?",
+            "choices": [
+              "2/3",
+              "3/2",
+              "1/4",
+              "3/3"
+            ],
+            "answer": 0,
+            "explain": "2 out of 3 equal parts is 2/3.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 3 part(s) out of 4 equal parts?",
+            "choices": [
+              "3/4",
+              "4/3",
+              "1/5",
+              "4/4"
+            ],
+            "answer": 0,
+            "explain": "3 out of 4 equal parts is 3/4.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 4 part(s) out of 8 equal parts?",
+            "choices": [
+              "4/8",
+              "8/4",
+              "1/9",
+              "5/8"
+            ],
+            "answer": 0,
+            "explain": "4 out of 8 equal parts is 4/8.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          },
+          {
+            "text": "Which fraction shows 5 part(s) out of 8 equal parts?",
+            "choices": [
+              "5/8",
+              "8/5",
+              "1/9",
+              "6/8"
+            ],
+            "answer": 0,
+            "explain": "5 out of 8 equal parts is 5/8.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Basic",
+            "hint": "Numerator is parts selected; denominator is total equal parts."
+          }
+        ],
+        [
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          },
+          {
+            "text": "Which fraction is equivalent to 1/2?",
+            "choices": [
+              "1/3",
+              "2/4",
+              "2/3",
+              "3/5"
+            ],
+            "answer": 1,
+            "explain": "2/4 is equivalent to 1/2.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Intermediate",
+            "hint": "Think of half of a shape."
+          }
+        ],
+        [
+          {
+            "text": "A number line from 0 to 1 is divided into 2 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/2",
+              "2/1",
+              "2/2",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/2.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 3 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/3",
+              "3/1",
+              "2/3",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/3.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 4 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/4",
+              "4/1",
+              "2/4",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/4.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 4 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/4",
+              "4/1",
+              "2/4",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/4.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 6 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/6",
+              "6/1",
+              "2/6",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/6.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 6 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/6",
+              "6/1",
+              "2/6",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/6.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 3 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/3",
+              "3/1",
+              "2/3",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/3.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 4 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/4",
+              "4/1",
+              "2/4",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/4.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 8 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/8",
+              "8/1",
+              "2/8",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/8.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          },
+          {
+            "text": "A number line from 0 to 1 is divided into 8 equal parts. What is the first mark after 0?",
+            "choices": [
+              "1/8",
+              "8/1",
+              "2/8",
+              "1/2"
+            ],
+            "answer": 0,
+            "explain": "The first mark is 1/8.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "FAST Ready",
+            "hint": "First mark means one part."
+          }
+        ],
+        [
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/2",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 2,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/3",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/4",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/4",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/6",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/6",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/3",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/4",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/8",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          },
+          {
+            "text": "Which is greater?",
+            "choices": [
+              "1/8",
+              "1/2",
+              "They are equal",
+              "Cannot compare"
+            ],
+            "answer": 1,
+            "explain": "For unit fractions, smaller denominators make larger pieces. If both are 1/2, they are equal.",
+            "std": "MA.3.FR.2",
+            "domain": 2,
+            "level": "Applied Problems",
+            "hint": "Compare the size of one piece."
+          }
+        ],
+        [
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          },
+          {
+            "text": "Which fraction is a unit fraction?",
+            "choices": [
+              "2/3",
+              "3/4",
+              "1/8",
+              "4/4"
+            ],
+            "answer": 2,
+            "explain": "A unit fraction has numerator 1.",
+            "std": "MA.3.FR.1",
+            "domain": 2,
+            "level": "Mastery Check",
+            "hint": "Look for numerator 1."
+          }
+        ]
+      ]
+    },
+    {
+      "title": "Measurement & Geometry",
+      "practices": [
+        [
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          },
+          {
+            "text": "Which unit would best measure the length of a small pencil?",
+            "choices": [
+              "inches",
+              "yards",
+              "miles",
+              "gallons"
+            ],
+            "answer": 0,
+            "explain": "A pencil is small, so inches is best.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Basic",
+            "hint": "Small lengths use inches."
+          }
+        ],
+        [
+          {
+            "text": "A rectangle has 4 rows and 5 columns of square tiles. What is the area?",
+            "choices": [
+              "20",
+              "9",
+              "18",
+              "22"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 20 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 3 rows and 8 columns of square tiles. What is the area?",
+            "choices": [
+              "24",
+              "11",
+              "22",
+              "26"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 24 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 6 rows and 2 columns of square tiles. What is the area?",
+            "choices": [
+              "12",
+              "8",
+              "16",
+              "14"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 12 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 7 rows and 4 columns of square tiles. What is the area?",
+            "choices": [
+              "28",
+              "11",
+              "22",
+              "30"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 28 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 5 rows and 5 columns of square tiles. What is the area?",
+            "choices": [
+              "25",
+              "10",
+              "20",
+              "27"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 25 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 9 rows and 3 columns of square tiles. What is the area?",
+            "choices": [
+              "27",
+              "12",
+              "24",
+              "29"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 27 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 8 rows and 6 columns of square tiles. What is the area?",
+            "choices": [
+              "48",
+              "14",
+              "28",
+              "50"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 48 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 10 rows and 2 columns of square tiles. What is the area?",
+            "choices": [
+              "20",
+              "12",
+              "24",
+              "22"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 20 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 6 rows and 7 columns of square tiles. What is the area?",
+            "choices": [
+              "42",
+              "13",
+              "26",
+              "44"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 42 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          },
+          {
+            "text": "A rectangle has 12 rows and 4 columns of square tiles. What is the area?",
+            "choices": [
+              "48",
+              "16",
+              "32",
+              "50"
+            ],
+            "answer": 0,
+            "explain": "Area = rows \u00d7 columns = 48 square units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Intermediate",
+            "hint": "Multiply rows and columns."
+          }
+        ],
+        [
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          },
+          {
+            "text": "Which shape has 4 equal sides?",
+            "choices": [
+              "triangle",
+              "square",
+              "circle",
+              "pentagon"
+            ],
+            "answer": 1,
+            "explain": "A square has 4 equal sides.",
+            "std": "MA.3.GR.1",
+            "domain": 3,
+            "level": "FAST Ready",
+            "hint": "Think about equal side lengths."
+          }
+        ],
+        [
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          },
+          {
+            "text": "How many minutes are in 1 hour?",
+            "choices": [
+              "30",
+              "45",
+              "60",
+              "100"
+            ],
+            "answer": 2,
+            "explain": "There are 60 minutes in 1 hour.",
+            "std": "MA.3.M.1",
+            "domain": 3,
+            "level": "Applied Problems",
+            "hint": "Think about a clock."
+          }
+        ],
+        [
+          {
+            "text": "What is the perimeter of a rectangle with length 4 units and width 5 units?",
+            "choices": [
+              "9",
+              "20",
+              "18",
+              "20"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 4+5+4+5 = 18 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 3 units and width 8 units?",
+            "choices": [
+              "11",
+              "24",
+              "22",
+              "24"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 3+8+3+8 = 22 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 6 units and width 2 units?",
+            "choices": [
+              "8",
+              "12",
+              "16",
+              "18"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 6+2+6+2 = 16 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 7 units and width 4 units?",
+            "choices": [
+              "11",
+              "28",
+              "22",
+              "24"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 7+4+7+4 = 22 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 5 units and width 5 units?",
+            "choices": [
+              "10",
+              "25",
+              "20",
+              "22"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 5+5+5+5 = 20 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 9 units and width 3 units?",
+            "choices": [
+              "12",
+              "27",
+              "24",
+              "26"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 9+3+9+3 = 24 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 8 units and width 6 units?",
+            "choices": [
+              "14",
+              "48",
+              "28",
+              "30"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 8+6+8+6 = 28 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 10 units and width 2 units?",
+            "choices": [
+              "12",
+              "20",
+              "24",
+              "26"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 10+2+10+2 = 24 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 6 units and width 7 units?",
+            "choices": [
+              "13",
+              "42",
+              "26",
+              "28"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 6+7+6+7 = 26 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          },
+          {
+            "text": "What is the perimeter of a rectangle with length 12 units and width 4 units?",
+            "choices": [
+              "16",
+              "48",
+              "32",
+              "34"
+            ],
+            "answer": 2,
+            "explain": "Perimeter = 12+4+12+4 = 32 units.",
+            "std": "MA.3.GR.2",
+            "domain": 3,
+            "level": "Mastery Check",
+            "hint": "Add all sides."
+          }
+        ]
+      ]
+    },
+    {
+      "title": "Data & Graphs",
+      "practices": [
+        [
+          {
+            "text": "A bar graph shows Apples = 8 and Oranges = 5. How many more apples than oranges?",
+            "choices": [
+              "3",
+              "13",
+              "5",
+              "8"
+            ],
+            "answer": 0,
+            "explain": "8 - 5 = 3.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 12 and Oranges = 7. How many more apples than oranges?",
+            "choices": [
+              "5",
+              "19",
+              "7",
+              "12"
+            ],
+            "answer": 0,
+            "explain": "12 - 7 = 5.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 10 and Oranges = 4. How many more apples than oranges?",
+            "choices": [
+              "6",
+              "14",
+              "4",
+              "10"
+            ],
+            "answer": 0,
+            "explain": "10 - 4 = 6.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 9 and Oranges = 6. How many more apples than oranges?",
+            "choices": [
+              "3",
+              "15",
+              "6",
+              "9"
+            ],
+            "answer": 0,
+            "explain": "9 - 6 = 3.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 15 and Oranges = 8. How many more apples than oranges?",
+            "choices": [
+              "7",
+              "23",
+              "8",
+              "15"
+            ],
+            "answer": 0,
+            "explain": "15 - 8 = 7.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 11 and Oranges = 3. How many more apples than oranges?",
+            "choices": [
+              "8",
+              "14",
+              "3",
+              "11"
+            ],
+            "answer": 0,
+            "explain": "11 - 3 = 8.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 14 and Oranges = 9. How many more apples than oranges?",
+            "choices": [
+              "5",
+              "23",
+              "9",
+              "14"
+            ],
+            "answer": 0,
+            "explain": "14 - 9 = 5.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 13 and Oranges = 5. How many more apples than oranges?",
+            "choices": [
+              "8",
+              "18",
+              "5",
+              "13"
+            ],
+            "answer": 0,
+            "explain": "13 - 5 = 8.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 16 and Oranges = 10. How many more apples than oranges?",
+            "choices": [
+              "6",
+              "26",
+              "10",
+              "16"
+            ],
+            "answer": 0,
+            "explain": "16 - 10 = 6.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          },
+          {
+            "text": "A bar graph shows Apples = 18 and Oranges = 12. How many more apples than oranges?",
+            "choices": [
+              "6",
+              "30",
+              "12",
+              "18"
+            ],
+            "answer": 0,
+            "explain": "18 - 12 = 6.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Basic",
+            "hint": "More than means find the difference."
+          }
+        ],
+        [
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 5 stars, how many students is that?",
+            "choices": [
+              "5",
+              "7",
+              "10",
+              "15"
+            ],
+            "answer": 2,
+            "explain": "5 stars \u00d7 2 = 10 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 7 stars, how many students is that?",
+            "choices": [
+              "7",
+              "9",
+              "14",
+              "21"
+            ],
+            "answer": 2,
+            "explain": "7 stars \u00d7 2 = 14 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 4 stars, how many students is that?",
+            "choices": [
+              "4",
+              "6",
+              "8",
+              "12"
+            ],
+            "answer": 2,
+            "explain": "4 stars \u00d7 2 = 8 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 6 stars, how many students is that?",
+            "choices": [
+              "6",
+              "8",
+              "12",
+              "18"
+            ],
+            "answer": 2,
+            "explain": "6 stars \u00d7 2 = 12 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 8 stars, how many students is that?",
+            "choices": [
+              "8",
+              "10",
+              "16",
+              "24"
+            ],
+            "answer": 2,
+            "explain": "8 stars \u00d7 2 = 16 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 3 stars, how many students is that?",
+            "choices": [
+              "3",
+              "5",
+              "6",
+              "9"
+            ],
+            "answer": 2,
+            "explain": "3 stars \u00d7 2 = 6 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 9 stars, how many students is that?",
+            "choices": [
+              "9",
+              "11",
+              "18",
+              "27"
+            ],
+            "answer": 2,
+            "explain": "9 stars \u00d7 2 = 18 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 5 stars, how many students is that?",
+            "choices": [
+              "5",
+              "7",
+              "10",
+              "15"
+            ],
+            "answer": 2,
+            "explain": "5 stars \u00d7 2 = 10 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 10 stars, how many students is that?",
+            "choices": [
+              "10",
+              "12",
+              "20",
+              "30"
+            ],
+            "answer": 2,
+            "explain": "10 stars \u00d7 2 = 20 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          },
+          {
+            "text": "A picture graph key says each star = 2 students. If there are 12 stars, how many students is that?",
+            "choices": [
+              "12",
+              "14",
+              "24",
+              "36"
+            ],
+            "answer": 2,
+            "explain": "12 stars \u00d7 2 = 24 students.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Intermediate",
+            "hint": "Use the key."
+          }
+        ],
+        [
+          {
+            "text": "A table shows Monday = 8 books and Tuesday = 5 books. How many books total?",
+            "choices": [
+              "3",
+              "13",
+              "8",
+              "5"
+            ],
+            "answer": 1,
+            "explain": "8 + 5 = 13.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 12 books and Tuesday = 7 books. How many books total?",
+            "choices": [
+              "5",
+              "19",
+              "12",
+              "7"
+            ],
+            "answer": 1,
+            "explain": "12 + 7 = 19.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 10 books and Tuesday = 4 books. How many books total?",
+            "choices": [
+              "6",
+              "14",
+              "10",
+              "4"
+            ],
+            "answer": 1,
+            "explain": "10 + 4 = 14.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 9 books and Tuesday = 6 books. How many books total?",
+            "choices": [
+              "3",
+              "15",
+              "9",
+              "6"
+            ],
+            "answer": 1,
+            "explain": "9 + 6 = 15.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 15 books and Tuesday = 8 books. How many books total?",
+            "choices": [
+              "7",
+              "23",
+              "15",
+              "8"
+            ],
+            "answer": 1,
+            "explain": "15 + 8 = 23.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 11 books and Tuesday = 3 books. How many books total?",
+            "choices": [
+              "8",
+              "14",
+              "11",
+              "3"
+            ],
+            "answer": 1,
+            "explain": "11 + 3 = 14.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 14 books and Tuesday = 9 books. How many books total?",
+            "choices": [
+              "5",
+              "23",
+              "14",
+              "9"
+            ],
+            "answer": 1,
+            "explain": "14 + 9 = 23.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 13 books and Tuesday = 5 books. How many books total?",
+            "choices": [
+              "8",
+              "18",
+              "13",
+              "5"
+            ],
+            "answer": 1,
+            "explain": "13 + 5 = 18.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 16 books and Tuesday = 10 books. How many books total?",
+            "choices": [
+              "6",
+              "26",
+              "16",
+              "10"
+            ],
+            "answer": 1,
+            "explain": "16 + 10 = 26.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          },
+          {
+            "text": "A table shows Monday = 18 books and Tuesday = 12 books. How many books total?",
+            "choices": [
+              "6",
+              "30",
+              "18",
+              "12"
+            ],
+            "answer": 1,
+            "explain": "18 + 12 = 30.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "FAST Ready",
+            "hint": "Total means add."
+          }
+        ],
+        [
+          {
+            "text": "A line plot shows 5 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 5 inches",
+              "5 objects measured 5 inches",
+              "10 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "5 Xs above 5 means 5 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 7 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 7 inches",
+              "7 objects measured 5 inches",
+              "12 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "7 Xs above 5 means 7 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 4 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 4 inches",
+              "4 objects measured 5 inches",
+              "9 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "4 Xs above 5 means 4 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 6 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 6 inches",
+              "6 objects measured 5 inches",
+              "11 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "6 Xs above 5 means 6 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 8 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 8 inches",
+              "8 objects measured 5 inches",
+              "13 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "8 Xs above 5 means 8 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 3 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 3 inches",
+              "3 objects measured 5 inches",
+              "8 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "3 Xs above 5 means 3 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 9 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 9 inches",
+              "9 objects measured 5 inches",
+              "14 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "9 Xs above 5 means 9 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 5 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 5 inches",
+              "5 objects measured 5 inches",
+              "10 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "5 Xs above 5 means 5 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 10 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 10 inches",
+              "10 objects measured 5 inches",
+              "15 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "10 Xs above 5 means 10 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          },
+          {
+            "text": "A line plot shows 12 Xs above 5 inches. What does that mean?",
+            "choices": [
+              "5 objects measured 12 inches",
+              "12 objects measured 5 inches",
+              "17 objects measured 5 inches",
+              "No objects were measured"
+            ],
+            "answer": 1,
+            "explain": "12 Xs above 5 means 12 objects measured 5 inches.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Applied Problems",
+            "hint": "Each X is one object."
+          }
+        ],
+        [
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          },
+          {
+            "text": "Which question can a bar graph answer?",
+            "choices": [
+              "Which choice has the most votes?",
+              "What is your name?",
+              "How do you spell graph?",
+              "What is your favorite joke?"
+            ],
+            "answer": 0,
+            "explain": "Bar graphs compare categories and can show which has the most.",
+            "std": "MA.3.DP.1",
+            "domain": 4,
+            "level": "Mastery Check",
+            "hint": "Graphs compare information."
+          }
+        ]
+      ]
+    }
   ]
 };
 
@@ -697,406 +3935,134 @@ let studentInfo = {};
 let verifiedClassCode = null;
 let teacherSessionCodes = [];
 let currentTestMode = "";
+let selectedDomainIndex = 0;
 
-function openTeacherPanel(){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('teacherPanel').classList.add('active');
-}
-
-function goHome(){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('home').classList.add('active');
-}
-
-function normalizeStudentId(rawId){
-  const id = String(rawId || '').trim();
-  if(!/^\d{7,8}$/.test(id)) return null;
-  return id.length === 7 ? '0' + id : id;
-}
+function openTeacherPanel(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('teacherPanel').classList.add('active');}
+function goHome(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('home').classList.add('active');}
+function normalizeStudentId(rawId){const id=String(rawId||'').trim();if(!/^\d{7,8}$/.test(id)) return null;return id.length===7?'0'+id:id;}
 
 async function validateClassCode(){
-  const rawCode = (document.getElementById('classCode')?.value || '').trim().toUpperCase();
-  const status = document.getElementById('classCodeCheckStatus');
-
-  if(!rawCode){
-    status.style.color = 'var(--wrong)';
-    status.textContent = 'Please enter a class code.';
-    return false;
-  }
-
+  const rawCode=(document.getElementById('classCode')?.value||'').trim().toUpperCase();
+  const status=document.getElementById('classCodeCheckStatus');
+  if(!rawCode){status.style.color='var(--wrong)';status.textContent='Please enter a class code.';return false;}
   if(!hasSupabase){
-    const localCodes = JSON.parse(localStorage.getItem('fastMath3ClassCodes') || '[]');
-    const demoOk = rawCode === 'DEMO3A';
-    const localMatch = localCodes.find(c => c.code === rawCode);
-
-    if(!demoOk && !localMatch){
-      verifiedClassCode = null;
-      status.style.color = 'var(--wrong)';
-      status.textContent = 'Invalid class code. Try DEMO3A.';
-      return false;
-    }
-
-    verifiedClassCode = rawCode;
-    enableStudentFields();
-
-    status.style.color = 'var(--correct)';
-    status.textContent = demoOk
-      ? 'Class verified: Demo Teacher · Period-3'
-      : `Class verified: ${localMatch.teacher} · ${localMatch.period}`;
-
+    const localCodes=JSON.parse(localStorage.getItem('fastMath3ClassCodes')||'[]');
+    const demoOk=rawCode==='DEMO3A';
+    const localMatch=localCodes.find(c=>c.code===rawCode);
+    if(!demoOk&&!localMatch){verifiedClassCode=null;status.style.color='var(--wrong)';status.textContent='Invalid class code. Try DEMO3A.';return false;}
+    verifiedClassCode=rawCode;enableStudentFields();
+    status.style.color='var(--correct)';
+    status.textContent=demoOk?'Class verified: Demo Teacher · Period-3':`Class verified: ${localMatch.teacher} · ${localMatch.period}`;
     return true;
   }
-
-  const { data, error } = await supabaseClient
-    .from('classes')
-    .select('class_code, teacher_name, period, active')
-    .eq('class_code', rawCode)
-    .eq('active', true)
-    .limit(1);
-
-  if(error || !data || data.length === 0){
-    verifiedClassCode = null;
-    status.style.color = 'var(--wrong)';
-    status.textContent = 'Invalid class code.';
-    return false;
-  }
-
-  verifiedClassCode = rawCode;
-  enableStudentFields();
-
-  status.style.color = 'var(--correct)';
-  status.textContent = `Class verified: ${data[0].teacher_name} · ${data[0].period}`;
-  return true;
+  const {data,error}=await supabaseClient.from('classes').select('class_code, teacher_name, period, active').eq('class_code',rawCode).eq('active',true).limit(1);
+  if(error||!data||data.length===0){verifiedClassCode=null;status.style.color='var(--wrong)';status.textContent='Invalid class code.';return false;}
+  verifiedClassCode=rawCode;enableStudentFields();status.style.color='var(--correct)';status.textContent=`Class verified: ${data[0].teacher_name} · ${data[0].period}`;return true;
 }
 
-function enableStudentFields(){
-  document.getElementById('classCode').value = verifiedClassCode;
-  document.getElementById('firstName').disabled = false;
-  document.getElementById('lastName').disabled = false;
-  document.getElementById('studentId').disabled = false;
-}
+function enableStudentFields(){document.getElementById('classCode').value=verifiedClassCode;document.getElementById('firstName').disabled=false;document.getElementById('lastName').disabled=false;document.getElementById('studentId').disabled=false;}
 
 function saveStudentInfo(){
-  const firstName = document.getElementById('firstName').value.trim();
-  const lastName = document.getElementById('lastName').value.trim();
-  const rawStudentId = document.getElementById('studentId').value.trim();
-  const classCode = document.getElementById('classCode').value.trim().toUpperCase();
-  const status = document.getElementById('studentStatus');
-  const studentId = normalizeStudentId(rawStudentId);
-
-  if(!verifiedClassCode || classCode !== verifiedClassCode){
-    status.style.color = 'var(--wrong)';
-    status.textContent = 'Please validate your Class Code before starting.';
-    return false;
-  }
-
-  if(!firstName || !lastName || !studentId){
-    status.style.color = 'var(--wrong)';
-    status.textContent = 'Please complete all required fields. Student ID must be 7 or 8 digits.';
-    return false;
-  }
-
-  studentInfo = { firstName, lastName, studentId, classCode };
-  localStorage.setItem('fastMath3StudentInfo', JSON.stringify(studentInfo));
-
-  document.getElementById('studentId').value = studentId;
-  status.style.color = 'var(--correct)';
-  status.textContent = 'Student information ready.';
-  return true;
+  const firstName=document.getElementById('firstName').value.trim();
+  const lastName=document.getElementById('lastName').value.trim();
+  const rawStudentId=document.getElementById('studentId').value.trim();
+  const classCode=document.getElementById('classCode').value.trim().toUpperCase();
+  const status=document.getElementById('studentStatus');
+  const studentId=normalizeStudentId(rawStudentId);
+  if(!verifiedClassCode||classCode!==verifiedClassCode){status.style.color='var(--wrong)';status.textContent='Please validate your Class Code before starting.';return false;}
+  if(!firstName||!lastName||!studentId){status.style.color='var(--wrong)';status.textContent='Please complete all required fields. Student ID must be 7 or 8 digits.';return false;}
+  studentInfo={firstName,lastName,studentId,classCode};localStorage.setItem('fastMath3StudentInfo',JSON.stringify(studentInfo));
+  document.getElementById('studentId').value=studentId;status.style.color='var(--correct)';status.textContent='Student information ready.';return true;
 }
 
-function clearStudentInfo(){
-  studentInfo = {};
-  verifiedClassCode = null;
-  localStorage.removeItem('fastMath3StudentInfo');
+function clearStudentInfo(){studentInfo={};verifiedClassCode=null;localStorage.removeItem('fastMath3StudentInfo');['classCode','firstName','lastName','studentId'].forEach(id=>{document.getElementById(id).value='';});document.getElementById('firstName').disabled=true;document.getElementById('lastName').disabled=true;document.getElementById('studentId').disabled=true;document.getElementById('studentStatus').textContent='';document.getElementById('classCodeCheckStatus').textContent='';}
 
-  ['classCode','firstName','lastName','studentId'].forEach(id=>{
-    document.getElementById(id).value = '';
-  });
-
-  document.getElementById('firstName').disabled = true;
-  document.getElementById('lastName').disabled = true;
-  document.getElementById('studentId').disabled = true;
-
-  document.getElementById('studentStatus').textContent = '';
-  document.getElementById('classCodeCheckStatus').textContent = '';
-}
-
-function generateSixLetterCode(){
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let code = '';
-  for(let i = 0; i < 6; i++){
-    code += letters[Math.floor(Math.random() * letters.length)];
-  }
-  return code;
-}
-
+function generateSixLetterCode(){const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';let code='';for(let i=0;i<6;i++){code+=letters[Math.floor(Math.random()*letters.length)];}return code;}
 async function createClassCode(){
-  const status = document.getElementById('classCodeStatus');
-  const teacherName = document.getElementById('teacherName').value.trim();
-  const periodNumber = document.getElementById('teacherPeriod').value.trim();
-  const period = `Period-${periodNumber}`;
-
-  if(!teacherName || !periodNumber){
-    status.className = 'save-status bad';
-    status.textContent = 'Please enter Teacher Name and Period number.';
-    return;
-  }
-
+  const status=document.getElementById('classCodeStatus');const teacherName=document.getElementById('teacherName').value.trim();const periodNumber=document.getElementById('teacherPeriod').value.trim();const period=`Period-${periodNumber}`;
+  if(!teacherName||!periodNumber){status.className='save-status bad';status.textContent='Please enter Teacher Name and Period number.';return;}
   if(!hasSupabase){
-    const saved = JSON.parse(localStorage.getItem('fastMath3ClassCodes') || '[]');
-    const existing = saved.find(c => c.teacher === teacherName && c.period === period);
-
-    if(existing){
-      status.className = 'save-status good';
-      status.innerHTML = `Existing Class Code:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${existing.code}</span>`;
-      teacherSessionCodes.push(existing);
-      renderTeacherSessionCodes();
-      return;
-    }
-
-    const code = generateSixLetterCode();
-    const newCode = { code, teacher: teacherName, period };
-    saved.push(newCode);
-    localStorage.setItem('fastMath3ClassCodes', JSON.stringify(saved));
-
-    status.className = 'save-status good';
-    status.innerHTML = `New Class Code Created:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${code}</span>`;
-    teacherSessionCodes.push(newCode);
-    renderTeacherSessionCodes();
-    return;
+    const saved=JSON.parse(localStorage.getItem('fastMath3ClassCodes')||'[]');const existing=saved.find(c=>c.teacher===teacherName&&c.period===period);
+    if(existing){status.className='save-status good';status.innerHTML=`Existing Class Code:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${existing.code}</span>`;teacherSessionCodes.push(existing);renderTeacherSessionCodes();return;}
+    const code=generateSixLetterCode();const newCode={code,teacher:teacherName,period};saved.push(newCode);localStorage.setItem('fastMath3ClassCodes',JSON.stringify(saved));
+    status.className='save-status good';status.innerHTML=`New Class Code Created:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${code}</span>`;teacherSessionCodes.push(newCode);renderTeacherSessionCodes();return;
   }
-
-  const code = generateSixLetterCode();
-
-  const { error } = await supabaseClient
-    .from('classes')
-    .insert([{
-      class_code: code,
-      teacher_name: teacherName,
-      period: period,
-      class_name: null,
-      active: true
-    }]);
-
-  if(error){
-    status.className = 'save-status bad';
-    status.textContent = 'Error creating class code.';
-    return;
-  }
-
-  status.className = 'save-status good';
-  status.innerHTML = `New Class Code Created:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${code}</span>`;
-  teacherSessionCodes.push({ code, teacher: teacherName, period });
-  renderTeacherSessionCodes();
+  const code=generateSixLetterCode();const {error}=await supabaseClient.from('classes').insert([{class_code:code,teacher_name:teacherName,period:period,class_name:null,active:true}]);
+  if(error){status.className='save-status bad';status.textContent='Error creating class code.';return;}
+  status.className='save-status good';status.innerHTML=`New Class Code Created:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${code}</span>`;teacherSessionCodes.push({code,teacher:teacherName,period});renderTeacherSessionCodes();
 }
 
 function renderTeacherSessionCodes(){
-  const box = document.getElementById('teacherSessionCodes');
-  if(!box || teacherSessionCodes.length === 0) return;
-
-  box.innerHTML = `
-    <div class="qcard" style="margin-top:18px">
-      <div class="meta">Codes Created / Found This Session</div>
-      ${teacherSessionCodes.map(c => `
-        <div style="margin:8px 0;padding:10px;border-radius:10px;background:var(--card2)">
-          <b>${c.code}</b> · ${c.teacher} · ${c.period}
-        </div>
-      `).join('')}
-    </div>
-  `;
+  const box=document.getElementById('teacherSessionCodes');if(!box||teacherSessionCodes.length===0)return;
+  box.innerHTML=`<div class="qcard" style="margin-top:18px"><div class="meta">Codes Created / Found This Session</div>${teacherSessionCodes.map(c=>`<div style="margin:8px 0;padding:10px;border-radius:10px;background:var(--card2)"><b>${c.code}</b> · ${c.teacher} · ${c.period}</div>`).join('')}</div>`;
 }
 
-function startQuiz(mode,domainIndex){
+function openPracticeMenu(domainIndex){
   if(!saveStudentInfo()) return;
+  selectedDomainIndex=domainIndex;
+  const domain=BANKS.standard[domainIndex];
+  document.getElementById('practiceMenuTitle').textContent=domain.title;
+  const labels=['⭐ Practice 1 – Basic Skills','⭐⭐ Practice 2 – Intermediate','⭐⭐⭐ Practice 3 – FAST Ready','🏆 Practice 4 – Applied Problems','🔥 Practice 5 – Mastery Check'];
+  const box=document.getElementById('practiceButtons');box.innerHTML='';
+  labels.forEach((label,practiceIndex)=>{
+    const card=document.createElement('div');card.className='card';card.style.setProperty('--c','var(--primary)');card.onclick=()=>startQuiz(domainIndex,practiceIndex);
+    card.innerHTML=`<div class="icon">${practiceIndex+1}</div><span class="tag">10 Questions</span><h3>${label}</h3><p>${domain.title} · Practice set ${practiceIndex+1}</p><button class="btn">Start Practice →</button>`;
+    box.appendChild(card);
+  });
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('practiceMenu').classList.add('active');
+}
 
-  currentQuiz = [...BANKS[mode][domainIndex]];
-  currentIndex = 0;
-  answers = [];
-  currentTestMode = `${mode} practice domain ${domainIndex + 1}`;
-
-  document.getElementById('qtitle').textContent = getDomainTitle(domainIndex);
-
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('quiz').classList.add('active');
-
-  renderQuestion();
+function startQuiz(domainIndex,practiceIndex){
+  if(!saveStudentInfo()) return;
+  const domain=BANKS.standard[domainIndex];currentQuiz=[...domain.practices[practiceIndex]];currentIndex=0;answers=[];
+  currentTestMode=`Domain ${domainIndex+1} Practice ${practiceIndex+1}`;
+  document.getElementById('qtitle').textContent=`${domain.title} · Practice ${practiceIndex+1}`;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('quiz').classList.add('active');renderQuestion();
 }
 
 function startMock(mode){
   if(!saveStudentInfo()) return;
-
-  currentQuiz = BANKS[mode].flat();
-  currentQuiz = shuffleArray(currentQuiz).slice(0, 15);
-  currentIndex = 0;
-  answers = [];
-  currentTestMode = `${mode} mock test`;
-
-  document.getElementById('qtitle').textContent = 'FASTMath3 Mock Test';
-
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('quiz').classList.add('active');
-
-  renderQuestion();
-}
-
-function getDomainTitle(index){
-  const titles = [
-    'Number Sense',
-    'Multiplication & Division',
-    'Fractions',
-    'Measurement & Geometry',
-    'Data & Graphs'
-  ];
-  return titles[index] || 'Quiz';
+  currentQuiz=BANKS.standard.flatMap(domain=>domain.practices.flat());
+  currentQuiz=shuffleArray(currentQuiz).slice(0,25);currentIndex=0;answers=[];currentTestMode=`${mode} mock test`;
+  document.getElementById('qtitle').textContent='FASTMath3 Mock Test';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('quiz').classList.add('active');renderQuestion();
 }
 
 function renderQuestion(){
-  const q = currentQuiz[currentIndex];
-  if(!q) return showResults();
-
-  document.getElementById('qtext').textContent = q.text;
-  document.getElementById('meta').textContent = `${q.std} · ${q.level}`;
-  document.getElementById('hint').textContent = q.hint || '';
-  document.getElementById('counter').textContent = `${currentIndex + 1} / ${currentQuiz.length}`;
-  document.getElementById('progfill').style.width = `${((currentIndex) / currentQuiz.length) * 100}%`;
-
-  const choices = document.getElementById('choices');
-  choices.innerHTML = '';
-
-  q.choices.forEach((choice,i)=>{
-    const btn = document.createElement('button');
-    btn.className = 'choice';
-    btn.innerHTML = `<span class="letter">${String.fromCharCode(65+i)}</span>${choice}`;
-    btn.onclick = () => selectAnswer(i);
-    choices.appendChild(btn);
-  });
-
-  document.getElementById('fb').classList.remove('show');
-  document.getElementById('next').disabled = true;
-  updateLiveScore();
+  const q=currentQuiz[currentIndex];if(!q)return showResults();
+  document.getElementById('qtext').textContent=q.text;document.getElementById('meta').textContent=`${q.std} · ${q.level}`;document.getElementById('hint').textContent=q.hint||'';document.getElementById('counter').textContent=`${currentIndex+1} / ${currentQuiz.length}`;document.getElementById('progfill').style.width=`${(currentIndex/currentQuiz.length)*100}%`;
+  const choices=document.getElementById('choices');choices.innerHTML='';
+  q.choices.forEach((choice,i)=>{const btn=document.createElement('button');btn.className='choice';btn.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span>${choice}`;btn.onclick=()=>selectAnswer(i);choices.appendChild(btn);});
+  document.getElementById('fb').classList.remove('show');document.getElementById('next').disabled=true;updateLiveScore();
 }
 
 function selectAnswer(choiceIndex){
-  const q = currentQuiz[currentIndex];
-  const correct = choiceIndex === q.answer;
-
-  answers[currentIndex] = correct;
-
-  const buttons = document.querySelectorAll('.choice');
-  buttons.forEach((btn,i)=>{
-    btn.disabled = true;
-    if(i === q.answer) btn.classList.add('correct');
-    if(i === choiceIndex && !correct) btn.classList.add('wrong');
-  });
-
-  document.getElementById('fb').classList.add('show');
-  document.getElementById('fbtitle').textContent = correct ? 'Correct! ⭐' : 'Try again! 💪';
-  document.getElementById('fbtext').textContent = q.explain;
-
-  document.getElementById('next').disabled = false;
-  updateLiveScore();
+  const q=currentQuiz[currentIndex];const correct=choiceIndex===q.answer;answers[currentIndex]=correct;
+  const buttons=document.querySelectorAll('.choice');buttons.forEach((btn,i)=>{btn.disabled=true;if(i===q.answer)btn.classList.add('correct');if(i===choiceIndex&&!correct)btn.classList.add('wrong');});
+  document.getElementById('fb').classList.add('show');document.getElementById('fbtitle').textContent=correct?'Correct! ⭐':'Try again! 💪';document.getElementById('fbtext').textContent=q.explain;document.getElementById('next').disabled=false;updateLiveScore();
 }
 
-function updateLiveScore(){
-  const answered = answers.length;
-  const correct = answers.filter(Boolean).length;
-  document.getElementById('live').textContent = `Score: ${correct}/${answered}`;
-}
-
-function nextQuestion(){
-  currentIndex++;
-
-  if(currentIndex >= currentQuiz.length){
-    showResults();
-  }else{
-    renderQuestion();
-  }
-}
+function updateLiveScore(){const answered=answers.length;const correct=answers.filter(Boolean).length;document.getElementById('live').textContent=`Score: ${correct}/${answered}`;}
+function nextQuestion(){currentIndex++;if(currentIndex>=currentQuiz.length){showResults();}else{renderQuestion();}}
 
 function showResults(){
-  const correct = answers.filter(Boolean).length;
-  const total = currentQuiz.length;
-  const pct = total ? Math.round((correct / total) * 100) : 0;
-
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('results').classList.add('active');
-
-  document.getElementById('bigscore').textContent = `${pct}%`;
-  document.getElementById('rsub').textContent = `${correct} out of ${total} correct`;
-
-  let message = '';
-  if(pct >= 90){
-    document.getElementById('emoji').textContent = '🏆';
-    message = 'Amazing work! You are showing FAST mastery.';
-  }else if(pct >= 70){
-    document.getElementById('emoji').textContent = '⭐';
-    message = 'Good job! Keep practicing to become even stronger.';
-  }else{
-    document.getElementById('emoji').textContent = '💪';
-    message = 'Keep practicing. Every try helps you improve.';
-  }
-
-  document.getElementById('message').textContent = message;
-
-  submitResult(correct,total,pct);
+  const correct=answers.filter(Boolean).length;const total=currentQuiz.length;const pct=total?Math.round((correct/total)*100):0;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('results').classList.add('active');
+  document.getElementById('bigscore').textContent=`${pct}%`;document.getElementById('rsub').textContent=`${correct} out of ${total} correct`;
+  let message='';if(pct>=90){document.getElementById('emoji').textContent='🏆';message='Amazing work! You are showing FAST mastery.';}else if(pct>=70){document.getElementById('emoji').textContent='⭐';message='Good job! Keep practicing to become even stronger.';}else{document.getElementById('emoji').textContent='💪';message='Keep practicing. Every try helps you improve.';}
+  document.getElementById('message').textContent=message;submitResult(correct,total,pct);
 }
 
 async function submitResult(correct,total,pct){
-  const status = document.getElementById('saveStatus');
-
-  const fullName = `${studentInfo.firstName} ${studentInfo.lastName}`;
-  const isMockTest = currentTestMode.toLowerCase().includes('mock');
-
-  const resultToSave = {
-    first_name: studentInfo.firstName,
-    last_name: studentInfo.lastName,
-    student_name: fullName,
-    student_id: studentInfo.studentId,
-    class_code: studentInfo.classCode,
-    test_mode: currentTestMode,
-    completion_type: isMockTest ? 'test' : 'practice',
-    completed: true,
-    attempt_number: isMockTest ? 1 : null,
-    score: `${correct}/${total}`,
-    percent: pct,
-    questions_total: total,
-    correct: correct,
-    best_score: pct,
-    created_at: new Date().toISOString()
-  };
-
-  if(!hasSupabase){
-    const localResults = JSON.parse(localStorage.getItem('fastMath3Results') || '[]');
-    localResults.push(resultToSave);
-    localStorage.setItem('fastMath3Results', JSON.stringify(localResults));
-
-    status.className = 'save-status good';
-    status.textContent = 'Result saved locally. Supabase is not connected yet.';
-    return;
-  }
-
-  const { error } = await supabaseClient
-    .from('test_results')
-    .insert([resultToSave]);
-
-  if(error){
-    status.className = 'save-status bad';
-    status.textContent = 'Error saving result.';
-    return;
-  }
-
-  status.className = 'save-status good';
-  status.textContent = 'Result saved successfully.';
+  const status=document.getElementById('saveStatus');const fullName=`${studentInfo.firstName} ${studentInfo.lastName}`;const isMockTest=currentTestMode.toLowerCase().includes('mock');
+  const resultToSave={first_name:studentInfo.firstName,last_name:studentInfo.lastName,student_name:fullName,student_id:studentInfo.studentId,class_code:studentInfo.classCode,test_mode:currentTestMode,completion_type:isMockTest?'test':'practice',completed:true,attempt_number:isMockTest?1:null,score:`${correct}/${total}`,percent:pct,questions_total:total,correct:correct,best_score:pct,created_at:new Date().toISOString()};
+  if(!hasSupabase){const localResults=JSON.parse(localStorage.getItem('fastMath3Results')||'[]');localResults.push(resultToSave);localStorage.setItem('fastMath3Results',JSON.stringify(localResults));status.className='save-status good';status.textContent='Result saved locally. Supabase is not connected yet.';return;}
+  const {error}=await supabaseClient.from('test_results').insert([resultToSave]);
+  if(error){status.className='save-status bad';status.textContent='Error saving result.';return;}
+  status.className='save-status good';status.textContent='Result saved successfully.';
 }
 
-function shuffleArray(arr){
-  return arr
-    .map(value => ({ value, sort: Math.random() }))
-    .sort((a,b) => a.sort - b.sort)
-    .map(({ value }) => value);
-}
+function shuffleArray(arr){return arr.map(value=>({value,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(({value})=>value);}
 </script>
-
 </body>
 </html>
