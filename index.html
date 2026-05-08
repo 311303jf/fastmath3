@@ -4147,11 +4147,73 @@ function renderQuestion(){
 }
 
 function selectAnswer(choiceIndex){
-  const q=currentQuiz[currentIndex];const correct=choiceIndex===q.answer;answers[currentIndex]=correct;
-  detailedAnswers[currentIndex] = {correct, benchmark:q.benchmark, category:q.category, skill:q.skill};
-  const buttons=document.querySelectorAll('.choice');buttons.forEach((btn,i)=>{btn.disabled=true;if(i===q.answer)btn.classList.add('correct');if(i===choiceIndex&&!correct)btn.classList.add('wrong');});
-  document.getElementById('fb').classList.add('show');document.getElementById('fbtitle').textContent=correct?'Correct! ⭐':'Try again! 💪';document.getElementById('fbtext').textContent=q.explain;document.getElementById('next').disabled=false;updateLiveScore();
+
+WITH THIS COMPLETE VERSION:
+
+function selectAnswer(choiceIndex){
+  const q = currentQuiz[currentIndex];
+  const correct = choiceIndex === q.answer;
+
+  answers[currentIndex] = correct;
+
+  detailedAnswers[currentIndex] = {
+    correct,
+    benchmark:q.benchmark,
+    category:q.category,
+    skill:q.skill
+  };
+
+  const buttons = document.querySelectorAll('.choice');
+
+  buttons.forEach((btn,i)=>{
+    btn.disabled = true;
+
+    if(i === q.answer){
+      btn.classList.add('correct');
+    }
+
+    if(i === choiceIndex && !correct){
+      btn.classList.add('wrong');
+    }
+  });
+
+  const correctLetter = String.fromCharCode(65 + q.answer);
+  const correctAnswer = q.choices[q.answer];
+
+  document.getElementById('fb').classList.add('show');
+
+  if(correct){
+
+    document.getElementById('fbtitle').textContent =
+      'Correct! ⭐';
+
+    document.getElementById('fbtext').innerHTML = `
+      <b>Great Job!</b><br><br>
+      ${q.explain}
+    `;
+
+  }else{
+
+    document.getElementById('fbtitle').textContent =
+      'Incorrect. Let’s review 💪';
+
+    document.getElementById('fbtext').innerHTML = `
+      <b>Correct Answer:</b>
+      ${correctLetter}. ${correctAnswer}<br><br>
+
+      <b>Explanation:</b><br>
+      ${q.explain}<br><br>
+
+      <b>Strategy Tip:</b><br>
+      ${q.hint || 'Read carefully and solve step-by-step.'}
+    `;
+  }
+
+  document.getElementById('next').disabled = false;
+
+  updateLiveScore();
 }
+
 
 function updateLiveScore(){const answered=answers.length;const correct=answers.filter(Boolean).length;document.getElementById('live').textContent=`Score: ${correct}/${answered}`;}
 function nextQuestion(){currentIndex++;if(currentIndex>=currentQuiz.length){showResults();}else{renderQuestion();}}
