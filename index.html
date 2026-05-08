@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -506,7 +506,7 @@ function openPracticeMenu(domainIndex){
 function startQuiz(domainIndex,practiceIndex){
   if(!saveStudentInfo()) return;
   const domain=BANKS.standard[domainIndex];
-  currentQuiz=[...domain.practices[practiceIndex]];
+  currentQuiz=[...domain.practices[practiceIndex]].map(randomizeChoices);
   currentIndex=0;answers=[];detailedAnswers=[];
   currentTestMode=`${domain.title} Practice ${practiceIndex+1}`;
   document.getElementById('qtitle').textContent=`${domain.title} · Practice ${practiceIndex+1}`;
@@ -524,7 +524,7 @@ function startMock(mode){
     ...allByDomain[2].slice(0,9),
     ...allByDomain[3].slice(0,8)
   ];
-  currentQuiz=shuffleArray(currentQuiz);currentIndex=0;answers=[];detailedAnswers=[];
+  currentQuiz=shuffleArray(currentQuiz).map(randomizeChoices);currentIndex=0;answers=[];detailedAnswers=[];
   currentTestMode=`${mode} PM3-style mock test`;
   document.getElementById('qtitle').textContent='FASTMath3 PM3-Style Mock Test';
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -700,6 +700,17 @@ async function submitResult(correct,total,pct){
 }
 
 function shuffleArray(arr){return arr.map(value=>({value,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(({value})=>value);}
+
+// ✅ Randomizes answer choice ORDER so the correct answer isn't always in the same position
+function randomizeChoices(q){
+  const indexed = q.choices.map((choice, i) => ({ choice, i }));
+  const shuffled = shuffleArray(indexed);
+  return {
+    ...q,
+    choices: shuffled.map(item => item.choice),
+    answer: shuffled.findIndex(item => item.i === q.answer)
+  };
+}
 
 window.addEventListener('load',()=>{
   renderHomeCards();
