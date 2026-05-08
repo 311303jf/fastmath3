@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FASTMath3</title>
+
+<style>
+:root{
+  --bg:#f4f8ff;
+  --card:#ffffff;
+  --card2:#eef5ff;
+  --text:#102033;
+  --muted:#64748b;
+  --border:#dbeafe;
+  --primary:#2563eb;
+  --primary2:#1d4ed8;
+  --correct:#16a34a;
+  --wrong:#dc2626;
+  --nso:#2563eb;
+  --mult:#f97316;
+  --frac:#9333ea;
+  --geo:#0f766e;
+  --data:#eab308;
+  --full:#ef4444;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(180deg,#e0f2fe,#f8fafc);
+  color:var(--text);
+}
+
+.screen{display:none;min-height:100vh;padding:24px}
+.screen.active{display:block}
+
+.header{text-align:center;margin-top:35px}
+.header h1{
+  font-size:3rem;
+  margin:8px 0;
+  color:#1e3a8a;
+}
+.sub{color:var(--muted);font-size:.95rem}
+
+.student-panel{
+  max-width:900px;
+  margin:24px auto;
+}
+.student-box,.qcard,.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 10px 25px rgba(15,23,42,.08);
+}
+.student-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+  margin-top:14px;
+}
+input{
+  padding:13px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  font-size:1rem;
+}
+input:disabled{background:#e5e7eb;color:#94a3b8}
+
+.student-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.smallbtn,.btn,.next,.back{
+  border:0;
+  border-radius:999px;
+  background:var(--primary);
+  color:white;
+  font-weight:800;
+  padding:11px 18px;
+  cursor:pointer;
+}
+.smallbtn:hover,.btn:hover,.next:hover,.back:hover{background:var(--primary2)}
+.secondary{background:#64748b}
+
+.section-title{
+  max-width:1100px;
+  margin:30px auto 12px;
+  font-size:1.35rem;
+  font-weight:900;
+  color:#1e3a8a;
+}
+
+.grid{
+  max-width:1100px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:18px;
+}
+.fullrow{
+  max-width:1100px;
+  margin:auto;
+}
+
+.card{
+  border-top:8px solid var(--c);
+  cursor:pointer;
+  transition:.2s;
+}
+.card:hover{transform:translateY(-4px)}
+.icon{font-size:2.2rem}
+.tag{
+  display:inline-block;
+  margin-top:8px;
+  background:var(--card2);
+  color:var(--primary);
+  padding:5px 10px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:.8rem;
+}
+.card h3{margin:12px 0 6px}
+.card p{color:var(--muted);min-height:55px}
+
+.quiz-head{
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.qtitle{font-size:1.4rem;font-weight:900}
+.counter{
+  background:white;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  font-weight:900;
+}
+.prog{
+  max-width:1000px;
+  margin:18px auto;
+  height:14px;
+  background:#dbeafe;
+  border-radius:999px;
+  overflow:hidden;
+}
+.progfill{
+  height:100%;
+  width:0%;
+  background:var(--primary);
+}
+.body{max-width:1000px;margin:auto}
+.meta{
+  color:var(--muted);
+  font-weight:800;
+  margin-bottom:10px;
+}
+.qtext{
+  font-size:1.35rem;
+  font-weight:900;
+  line-height:1.4;
+}
+.hint{
+  margin-top:10px;
+  color:#0f766e;
+  font-weight:700;
+}
+
+.choices{
+  display:grid;
+  gap:12px;
+  margin-top:18px;
+}
+.choice{
+  background:white;
+  border:2px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+  font-size:1.05rem;
+  text-align:left;
+  cursor:pointer;
+}
+.choice:hover{border-color:var(--primary)}
+.choice.correct{border-color:var(--correct);background:#dcfce7}
+.choice.wrong{border-color:var(--wrong);background:#fee2e2}
+.letter{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;height:30px;
+  background:#dbeafe;
+  color:#1e3a8a;
+  border-radius:50%;
+  margin-right:12px;
+  font-weight:900;
+}
+
+.fb{
+  display:none;
+  margin-top:18px;
+  padding:16px;
+  border-radius:18px;
+  background:#eef5ff;
+}
+.fb.show{display:block}
+.fb strong{display:block;margin-bottom:6px}
+
+.nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:18px;
+}
+.results{
+  max-width:800px;
+  margin:50px auto;
+  text-align:center;
+}
+.big{
+  font-size:4rem;
+  font-weight:900;
+  color:var(--primary);
+}
+.save-status{
+  margin-top:15px;
+  padding:12px;
+  border-radius:14px;
+}
+.good{background:#dcfce7;color:#166534}
+.bad{background:#fee2e2;color:#991b1b}
+</style>
+</head>
+
+<body>
+
+<div id="home" class="screen active">
+
+  <button onclick="openTeacherPanel()" style="position:absolute;top:18px;right:18px;background:white;border:1px solid var(--border);color:var(--primary);border-radius:999px;padding:8px 14px;font-weight:900;cursor:pointer">
+    Teacher Panel
+  </button>
+
+  <div class="header">
+    <div style="font-size:2.8rem">🌴📘</div>
+    <h1>FASTMath3</h1>
+    <p class="sub">Florida FAST Math Practice · 3rd Grade</p>
+  </div>
+
+  <div class="student-panel">
+    <div class="student-box">
+      <b>Student Information Required</b>
+      <p class="sub">Demo Class Code: <b>DEMO3A</b></p>
+
+      <div class="student-grid">
+        <input id="classCode" placeholder="Class Code">
+      </div>
+
+      <div class="student-actions">
+        <button class="smallbtn" onclick="validateClassCode()">Validate Class Code</button>
+        <span id="classCodeCheckStatus" class="sub"></span>
+      </div>
+
+      <div class="student-grid" style="margin-top:12px">
+        <input id="firstName" placeholder="First Name" disabled>
+        <input id="lastName" placeholder="Last Name" disabled>
+        <input id="studentId" placeholder="Student ID" disabled>
+      </div>
+
+      <div class="student-actions">
+        <button class="smallbtn" onclick="saveStudentInfo()">Save Info / Start Ready</button>
+        <button class="smallbtn secondary" onclick="clearStudentInfo()">Clear</button>
+        <span id="studentStatus" class="sub"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">FASTMath3 Practice Domains</div>
+
+  <div class="grid">
+    <div class="card" style="--c:var(--nso)" onclick="startQuiz('standard',0)">
+      <div class="icon">🔢</div>
+      <span class="tag">Practice</span>
+      <h3>Number Sense</h3>
+      <p>Place value, comparing numbers, rounding, addition and subtraction.</p>
+      <button class="btn">Start →</button>
+    </div>
+
+    <div class="card" style="--c:var(--mult)" onclick="startQuiz('standard',1)">
+      <div class="icon">✖️</div>
+      <span class="tag">Practice</span>
+      <h3>Multiplication & Division</h3>
+      <p>Equal groups, arrays, facts, and word problems.</p>
+      <button class="btn">Start →</button>
+    </div>
+
+    <div class="card" style="--c:var(--frac)" onclick="startQuiz('standard',2)">
+      <div class="icon">🍕</div>
+      <span class="tag">Practice</span>
+      <h3>Fractions</h3>
+      <p>Unit fractions, equivalent fractions, comparing fractions and number lines.</p>
+      <button class="btn">Start →</button>
+    </div>
+
+    <div class="card" style="--c:var(--geo)" onclick="startQuiz('standard',3)">
+      <div class="icon">📏</div>
+      <span class="tag">Practice</span>
+      <h3>Measurement & Geometry</h3>
+      <p>Area, perimeter, shapes, inches, feet, yards, and time.</p>
+      <button class="btn">Start →</button>
+    </div>
+
+    <div class="card" style="--c:var(--data)" onclick="startQuiz('standard',4)">
+      <div class="icon">📊</div>
+      <span class="tag">Practice</span>
+      <h3>Data & Graphs</h3>
+      <p>Tables, bar graphs, picture graphs, line plots and data questions.</p>
+      <button class="btn">Start →</button>
+    </div>
+  </div>
+
+  <div class="section-title">Mock Test</div>
+  <div class="fullrow">
+    <div class="card" style="--c:var(--full)" onclick="startMock('standard')">
+      <div class="icon">🏆</div>
+      <span class="tag">FAST Simulation</span>
+      <h3>3rd Grade FAST Math Mock Test</h3>
+      <p>Mixed review with questions from all domains.</p>
+      <button class="btn">Start Mock →</button>
+    </div>
+  </div>
+</div>
+
+<div id="teacherPanel" class="screen">
+  <div class="quiz-head">
+    <button class="back" onclick="goHome()">← Home</button>
+    <div class="qtitle">Teacher/Admin Panel</div>
+  </div>
+
+  <div class="body">
+    <div class="qcard">
+      <div class="meta">Create Class Code</div>
+
+      <div class="student-grid">
+        <input id="teacherName" placeholder="Teacher Name">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-weight:900">Period-</span>
+          <input id="teacherPeriod" placeholder="Number Only">
+        </div>
+      </div>
+
+      <div class="student-actions">
+        <button class="smallbtn" onclick="createClassCode()">Generate 6-Letter Class Code</button>
+      </div>
+
+      <div id="classCodeStatus" class="save-status"></div>
+      <div id="teacherSessionCodes"></div>
+    </div>
+  </div>
+</div>
+
+<div id="quiz" class="screen">
+  <div class="quiz-head">
+    <button class="back" onclick="goHome()">← Home</button>
+    <div class="qtitle" id="qtitle">Quiz</div>
+    <div class="counter" id="counter">1 / 10</div>
+  </div>
+
+  <div class="prog"><div class="progfill" id="progfill"></div></div>
+
+  <div class="body">
+    <div class="qcard">
+      <div class="meta" id="meta"></div>
+      <div class="qtext" id="qtext"></div>
+      <div class="hint" id="hint"></div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="fb" id="fb">
+      <strong id="fbtitle"></strong>
+      <span id="fbtext"></span>
+    </div>
+
+    <div class="nav">
+      <div id="live">Score: 0/0</div>
+      <button class="next" id="next" onclick="nextQuestion()" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<div id="results" class="screen">
+  <div class="results">
+    <div style="font-size:5rem" id="emoji">🏆</div>
+    <h1 id="rtitle">Results</h1>
+    <div class="big" id="bigscore">0%</div>
+    <p class="sub" id="rsub"></p>
+    <div class="qcard" id="message"></div>
+    <div id="saveStatus" class="save-status"></div>
+    <button class="next" onclick="goHome()">🏠 Back to Home</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+const hasSupabase =
+  SUPABASE_URL &&
+  SUPABASE_KEY &&
+  !SUPABASE_URL.includes('YOUR_') &&
+  !SUPABASE_KEY.includes('YOUR_');
+
+const supabaseClient = hasSupabase
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null;
+
+const BANKS = {
+  standard: [
+    [
+      {
+        text: "What is the value of the digit 7 in 4,732?",
+        choices: ["7", "70", "700", "7,000"],
+        answer: 2,
+        explain: "In 4,732, the 7 is in the hundreds place, so its value is 700.",
+        std: "MA.3.NSO.1",
+        domain: 0,
+        level: "Standard",
+        hint: "Look at the place value position."
+      },
+      {
+        text: "Which number is 3,000 + 400 + 20 + 6?",
+        choices: ["342", "3,426", "34,026", "3,246"],
+        answer: 1,
+        explain: "3,000 + 400 + 20 + 6 equals 3,426.",
+        std: "MA.3.NSO.1",
+        domain: 0,
+        level: "Standard",
+        hint: "Combine thousands, hundreds, tens, and ones."
+      },
+      {
+        text: "Which comparison is true?",
+        choices: ["5,231 < 5,132", "4,890 > 4,980", "6,105 > 6,015", "2,300 < 2,030"],
+        answer: 2,
+        explain: "6,105 is greater than 6,015 because 105 is greater than 015 after the thousands place.",
+        std: "MA.3.NSO.1",
+        domain: 0,
+        level: "Standard",
+        hint: "Compare from left to right."
+      },
+      {
+        text: "Round 3,684 to the nearest hundred.",
+        choices: ["3,600", "3,700", "3,800", "4,000"],
+        answer: 1,
+        explain: "The tens digit is 8, so round the hundreds digit up. 3,684 rounds to 3,700.",
+        std: "MA.3.NSO.1",
+        domain: 0,
+        level: "Standard",
+        hint: "Look at the tens digit."
+      },
+      {
+        text: "What is 527 + 348?",
+        choices: ["765", "875", "865", "885"],
+        answer: 1,
+        explain: "527 + 348 = 875.",
+        std: "MA.3.NSO.2",
+        domain: 0,
+        level: "Standard",
+        hint: "Add ones, tens, then hundreds."
+      }
+    ],
+    [
+      {
+        text: "Which equation matches 4 groups of 6?",
+        choices: ["4 + 6 = 10", "4 × 6 = 24", "6 - 4 = 2", "24 ÷ 4 = 8"],
+        answer: 1,
+        explain: "4 groups of 6 means 4 × 6 = 24.",
+        std: "MA.3.AR.1",
+        domain: 1,
+        level: "Standard",
+        hint: "Equal groups use multiplication."
+      },
+      {
+        text: "There are 5 rows of chairs. Each row has 7 chairs. How many chairs are there?",
+        choices: ["12", "25", "35", "57"],
+        answer: 2,
+        explain: "5 rows of 7 means 5 × 7 = 35.",
+        std: "MA.3.AR.1",
+        domain: 1,
+        level: "Standard",
+        hint: "Rows times chairs in each row."
+      },
+      {
+        text: "Which fact helps solve 36 ÷ 6?",
+        choices: ["6 × 6 = 36", "6 + 6 = 12", "36 - 6 = 30", "3 × 6 = 18"],
+        answer: 0,
+        explain: "Division and multiplication are related. Since 6 × 6 = 36, then 36 ÷ 6 = 6.",
+        std: "MA.3.AR.2",
+        domain: 1,
+        level: "Standard",
+        hint: "Think of the related multiplication fact."
+      },
+      {
+        text: "A teacher has 24 pencils and gives the same number to 4 students. How many pencils does each student get?",
+        choices: ["4", "5", "6", "8"],
+        answer: 2,
+        explain: "24 divided by 4 equals 6.",
+        std: "MA.3.AR.2",
+        domain: 1,
+        level: "Standard",
+        hint: "Share 24 into 4 equal groups."
+      },
+      {
+        text: "What is the missing number? 8 × ___ = 56",
+        choices: ["6", "7", "8", "9"],
+        answer: 1,
+        explain: "8 × 7 = 56.",
+        std: "MA.3.AR.1",
+        domain: 1,
+        level: "Standard",
+        hint: "Count by 8s."
+      }
+    ],
+    [
+      {
+        text: "Which fraction represents 1 part out of 4 equal parts?",
+        choices: ["1/2", "1/3", "1/4", "4/1"],
+        answer: 2,
+        explain: "One part out of four equal parts is 1/4.",
+        std: "MA.3.FR.1",
+        domain: 2,
+        level: "Standard",
+        hint: "The denominator tells the total equal parts."
+      },
+      {
+        text: "Which fraction is equivalent to 1/2?",
+        choices: ["1/3", "2/4", "3/5", "4/6"],
+        answer: 1,
+        explain: "2/4 is equivalent to 1/2 because both show one half.",
+        std: "MA.3.FR.2",
+        domain: 2,
+        level: "Standard",
+        hint: "Think of two equal parts and four equal parts."
+      },
+      {
+        text: "A number line from 0 to 1 is divided into 3 equal parts. What is the first mark after 0?",
+        choices: ["1/2", "1/3", "2/3", "3/3"],
+        answer: 1,
+        explain: "If the line is divided into thirds, the first mark is 1/3.",
+        std: "MA.3.FR.1",
+        domain: 2,
+        level: "Standard",
+        hint: "First mark means one part."
+      },
+      {
+        text: "Which fraction is greater?",
+        choices: ["1/6", "1/2", "They are equal", "Cannot compare"],
+        answer: 1,
+        explain: "1/2 is greater than 1/6 because half is larger than one sixth.",
+        std: "MA.3.FR.2",
+        domain: 2,
+        level: "Standard",
+        hint: "For unit fractions, smaller denominator means larger piece."
+      },
+      {
+        text: "Which is a unit fraction?",
+        choices: ["2/3", "3/4", "1/8", "4/4"],
+        answer: 2,
+        explain: "A unit fraction has numerator 1. So 1/8 is a unit fraction.",
+        std: "MA.3.FR.1",
+        domain: 2,
+        level: "Standard",
+        hint: "Look for numerator 1."
+      }
+    ],
+    [
+      {
+        text: "What is the perimeter of a rectangle with length 8 units and width 3 units?",
+        choices: ["11 units", "16 units", "22 units", "24 units"],
+        answer: 2,
+        explain: "Perimeter is the distance around. 8 + 3 + 8 + 3 = 22.",
+        std: "MA.3.GR.2",
+        domain: 3,
+        level: "Standard",
+        hint: "Add all sides."
+      },
+      {
+        text: "A rectangle has 4 rows and 5 columns of square tiles. What is its area?",
+        choices: ["9 square units", "10 square units", "20 square units", "25 square units"],
+        answer: 2,
+        explain: "Area is rows times columns. 4 × 5 = 20 square units.",
+        std: "MA.3.GR.2",
+        domain: 3,
+        level: "Standard",
+        hint: "Multiply rows by columns."
+      },
+      {
+        text: "Which unit would best measure the length of a pencil?",
+        choices: ["inches", "yards", "miles", "gallons"],
+        answer: 0,
+        explain: "A pencil is a small object, so inches is the best unit.",
+        std: "MA.3.M.1",
+        domain: 3,
+        level: "Standard",
+        hint: "Choose the unit for a small object."
+      },
+      {
+        text: "Which shape has 4 equal sides?",
+        choices: ["triangle", "square", "circle", "pentagon"],
+        answer: 1,
+        explain: "A square has 4 equal sides.",
+        std: "MA.3.GR.1",
+        domain: 3,
+        level: "Standard",
+        hint: "Think of a shape with all sides the same length."
+      },
+      {
+        text: "How many minutes are in 1 hour?",
+        choices: ["30", "45", "60", "100"],
+        answer: 2,
+        explain: "There are 60 minutes in 1 hour.",
+        std: "MA.3.M.1",
+        domain: 3,
+        level: "Standard",
+        hint: "Think about a clock."
+      }
+    ],
+    [
+      {
+        text: "A bar graph shows: Apples = 8, Oranges = 5. How many more apples than oranges?",
+        choices: ["2", "3", "5", "13"],
+        answer: 1,
+        explain: "8 - 5 = 3 more apples.",
+        std: "MA.3.DP.1",
+        domain: 4,
+        level: "Standard",
+        hint: "Find the difference."
+      },
+      {
+        text: "A picture graph key says each star = 2 students. If there are 4 stars, how many students is that?",
+        choices: ["4", "6", "8", "10"],
+        answer: 2,
+        explain: "4 stars × 2 students each = 8 students.",
+        std: "MA.3.DP.1",
+        domain: 4,
+        level: "Standard",
+        hint: "Use the key."
+      },
+      {
+        text: "A line plot shows 3 Xs above 5 inches. What does that mean?",
+        choices: ["5 students measured 3 inches", "3 objects measured 5 inches", "8 objects measured 5 inches", "The answer is 15"],
+        answer: 1,
+        explain: "Three Xs above 5 inches means 3 objects have a measurement of 5 inches.",
+        std: "MA.3.DP.1",
+        domain: 4,
+        level: "Standard",
+        hint: "Each X represents one object."
+      },
+      {
+        text: "Which question can be answered using a bar graph?",
+        choices: ["What is your name?", "Which fruit did most students choose?", "How do you spell apple?", "What color is math?"],
+        answer: 1,
+        explain: "A bar graph can show which category has the most votes.",
+        std: "MA.3.DP.1",
+        domain: 4,
+        level: "Standard",
+        hint: "Graphs compare categories."
+      },
+      {
+        text: "The table shows: Monday 6 books, Tuesday 9 books. How many books total?",
+        choices: ["3", "9", "12", "15"],
+        answer: 3,
+        explain: "6 + 9 = 15 books total.",
+        std: "MA.3.DP.1",
+        domain: 4,
+        level: "Standard",
+        hint: "Add the two days."
+      }
+    ]
+  ]
+};
+
+let currentQuiz = [];
+let currentIndex = 0;
+let answers = [];
+let studentInfo = {};
+let verifiedClassCode = null;
+let teacherSessionCodes = [];
+let currentTestMode = "";
+
+function openTeacherPanel(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('teacherPanel').classList.add('active');
+}
+
+function goHome(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+}
+
+function normalizeStudentId(rawId){
+  const id = String(rawId || '').trim();
+  if(!/^\d{7,8}$/.test(id)) return null;
+  return id.length === 7 ? '0' + id : id;
+}
+
+async function validateClassCode(){
+  const rawCode = (document.getElementById('classCode')?.value || '').trim().toUpperCase();
+  const status = document.getElementById('classCodeCheckStatus');
+
+  if(!rawCode){
+    status.style.color = 'var(--wrong)';
+    status.textContent = 'Please enter a class code.';
+    return false;
+  }
+
+  if(!hasSupabase){
+    const localCodes = JSON.parse(localStorage.getItem('fastMath3ClassCodes') || '[]');
+    const demoOk = rawCode === 'DEMO3A';
+    const localMatch = localCodes.find(c => c.code === rawCode);
+
+    if(!demoOk && !localMatch){
+      verifiedClassCode = null;
+      status.style.color = 'var(--wrong)';
+      status.textContent = 'Invalid class code. Try DEMO3A.';
+      return false;
+    }
+
+    verifiedClassCode = rawCode;
+    enableStudentFields();
+
+    status.style.color = 'var(--correct)';
+    status.textContent = demoOk
+      ? 'Class verified: Demo Teacher · Period-3'
+      : `Class verified: ${localMatch.teacher} · ${localMatch.period}`;
+
+    return true;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('classes')
+    .select('class_code, teacher_name, period, active')
+    .eq('class_code', rawCode)
+    .eq('active', true)
+    .limit(1);
+
+  if(error || !data || data.length === 0){
+    verifiedClassCode = null;
+    status.style.color = 'var(--wrong)';
+    status.textContent = 'Invalid class code.';
+    return false;
+  }
+
+  verifiedClassCode = rawCode;
+  enableStudentFields();
+
+  status.style.color = 'var(--correct)';
+  status.textContent = `Class verified: ${data[0].teacher_name} · ${data[0].period}`;
+  return true;
+}
+
+function enableStudentFields(){
+  document.getElementById('classCode').value = verifiedClassCode;
+  document.getElementById('firstName').disabled = false;
+  document.getElementById('lastName').disabled = false;
+  document.getElementById('studentId').disabled = false;
+}
+
+function saveStudentInfo(){
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const rawStudentId = document.getElementById('studentId').value.trim();
+  const classCode = document.getElementById('classCode').value.trim().toUpperCase();
+  const status = document.getElementById('studentStatus');
+  const studentId = normalizeStudentId(rawStudentId);
+
+  if(!verifiedClassCode || classCode !== verifiedClassCode){
+    status.style.color = 'var(--wrong)';
+    status.textContent = 'Please validate your Class Code before starting.';
+    return false;
+  }
+
+  if(!firstName || !lastName || !studentId){
+    status.style.color = 'var(--wrong)';
+    status.textContent = 'Please complete all required fields. Student ID must be 7 or 8 digits.';
+    return false;
+  }
+
+  studentInfo = { firstName, lastName, studentId, classCode };
+  localStorage.setItem('fastMath3StudentInfo', JSON.stringify(studentInfo));
+
+  document.getElementById('studentId').value = studentId;
+  status.style.color = 'var(--correct)';
+  status.textContent = 'Student information ready.';
+  return true;
+}
+
+function clearStudentInfo(){
+  studentInfo = {};
+  verifiedClassCode = null;
+  localStorage.removeItem('fastMath3StudentInfo');
+
+  ['classCode','firstName','lastName','studentId'].forEach(id=>{
+    document.getElementById(id).value = '';
+  });
+
+  document.getElementById('firstName').disabled = true;
+  document.getElementById('lastName').disabled = true;
+  document.getElementById('studentId').disabled = true;
+
+  document.getElementById('studentStatus').textContent = '';
+  document.getElementById('classCodeCheckStatus').textContent = '';
+}
+
+function generateSixLetterCode(){
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let code = '';
+  for(let i = 0; i < 6; i++){
+    code += letters[Math.floor(Math.random() * letters.length)];
+  }
+  return code;
+}
+
+async function createClassCode(){
+  const status = document.getElementById('classCodeStatus');
+  const teacherName = document.getElementById('teacherName').value.trim();
+  const periodNumber = document.getElementById('teacherPeriod').value.trim();
+  const period = `Period-${periodNumber}`;
+
+  if(!teacherName || !periodNumber){
+    status.className = 'save-status bad';
+    status.textContent = 'Please enter Teacher Name and Period number.';
+    return;
+  }
+
+  if(!hasSupabase){
+    const saved = JSON.parse(localStorage.getItem('fastMath3ClassCodes') || '[]');
+    const existing = saved.find(c => c.teacher === teacherName && c.period === period);
+
+    if(existing){
+      status.className = 'save-status good';
+      status.innerHTML = `Existing Class Code:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${existing.code}</span>`;
+      teacherSessionCodes.push(existing);
+      renderTeacherSessionCodes();
+      return;
+    }
+
+    const code = generateSixLetterCode();
+    const newCode = { code, teacher: teacherName, period };
+    saved.push(newCode);
+    localStorage.setItem('fastMath3ClassCodes', JSON.stringify(saved));
+
+    status.className = 'save-status good';
+    status.innerHTML = `New Class Code Created:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${code}</span>`;
+    teacherSessionCodes.push(newCode);
+    renderTeacherSessionCodes();
+    return;
+  }
+
+  const code = generateSixLetterCode();
+
+  const { error } = await supabaseClient
+    .from('classes')
+    .insert([{
+      class_code: code,
+      teacher_name: teacherName,
+      period: period,
+      class_name: null,
+      active: true
+    }]);
+
+  if(error){
+    status.className = 'save-status bad';
+    status.textContent = 'Error creating class code.';
+    return;
+  }
+
+  status.className = 'save-status good';
+  status.innerHTML = `New Class Code Created:<br><span style="font-size:2rem;color:var(--correct);font-weight:900">${code}</span>`;
+  teacherSessionCodes.push({ code, teacher: teacherName, period });
+  renderTeacherSessionCodes();
+}
+
+function renderTeacherSessionCodes(){
+  const box = document.getElementById('teacherSessionCodes');
+  if(!box || teacherSessionCodes.length === 0) return;
+
+  box.innerHTML = `
+    <div class="qcard" style="margin-top:18px">
+      <div class="meta">Codes Created / Found This Session</div>
+      ${teacherSessionCodes.map(c => `
+        <div style="margin:8px 0;padding:10px;border-radius:10px;background:var(--card2)">
+          <b>${c.code}</b> · ${c.teacher} · ${c.period}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function startQuiz(mode,domainIndex){
+  if(!saveStudentInfo()) return;
+
+  currentQuiz = [...BANKS[mode][domainIndex]];
+  currentIndex = 0;
+  answers = [];
+  currentTestMode = `${mode} practice domain ${domainIndex + 1}`;
+
+  document.getElementById('qtitle').textContent = getDomainTitle(domainIndex);
+
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('quiz').classList.add('active');
+
+  renderQuestion();
+}
+
+function startMock(mode){
+  if(!saveStudentInfo()) return;
+
+  currentQuiz = BANKS[mode].flat();
+  currentQuiz = shuffleArray(currentQuiz).slice(0, 15);
+  currentIndex = 0;
+  answers = [];
+  currentTestMode = `${mode} mock test`;
+
+  document.getElementById('qtitle').textContent = 'FASTMath3 Mock Test';
+
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('quiz').classList.add('active');
+
+  renderQuestion();
+}
+
+function getDomainTitle(index){
+  const titles = [
+    'Number Sense',
+    'Multiplication & Division',
+    'Fractions',
+    'Measurement & Geometry',
+    'Data & Graphs'
+  ];
+  return titles[index] || 'Quiz';
+}
+
+function renderQuestion(){
+  const q = currentQuiz[currentIndex];
+  if(!q) return showResults();
+
+  document.getElementById('qtext').textContent = q.text;
+  document.getElementById('meta').textContent = `${q.std} · ${q.level}`;
+  document.getElementById('hint').textContent = q.hint || '';
+  document.getElementById('counter').textContent = `${currentIndex + 1} / ${currentQuiz.length}`;
+  document.getElementById('progfill').style.width = `${((currentIndex) / currentQuiz.length) * 100}%`;
+
+  const choices = document.getElementById('choices');
+  choices.innerHTML = '';
+
+  q.choices.forEach((choice,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="letter">${String.fromCharCode(65+i)}</span>${choice}`;
+    btn.onclick = () => selectAnswer(i);
+    choices.appendChild(btn);
+  });
+
+  document.getElementById('fb').classList.remove('show');
+  document.getElementById('next').disabled = true;
+  updateLiveScore();
+}
+
+function selectAnswer(choiceIndex){
+  const q = currentQuiz[currentIndex];
+  const correct = choiceIndex === q.answer;
+
+  answers[currentIndex] = correct;
+
+  const buttons = document.querySelectorAll('.choice');
+  buttons.forEach((btn,i)=>{
+    btn.disabled = true;
+    if(i === q.answer) btn.classList.add('correct');
+    if(i === choiceIndex && !correct) btn.classList.add('wrong');
+  });
+
+  document.getElementById('fb').classList.add('show');
+  document.getElementById('fbtitle').textContent = correct ? 'Correct! ⭐' : 'Try again! 💪';
+  document.getElementById('fbtext').textContent = q.explain;
+
+  document.getElementById('next').disabled = false;
+  updateLiveScore();
+}
+
+function updateLiveScore(){
+  const answered = answers.length;
+  const correct = answers.filter(Boolean).length;
+  document.getElementById('live').textContent = `Score: ${correct}/${answered}`;
+}
+
+function nextQuestion(){
+  currentIndex++;
+
+  if(currentIndex >= currentQuiz.length){
+    showResults();
+  }else{
+    renderQuestion();
+  }
+}
+
+function showResults(){
+  const correct = answers.filter(Boolean).length;
+  const total = currentQuiz.length;
+  const pct = total ? Math.round((correct / total) * 100) : 0;
+
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('results').classList.add('active');
+
+  document.getElementById('bigscore').textContent = `${pct}%`;
+  document.getElementById('rsub').textContent = `${correct} out of ${total} correct`;
+
+  let message = '';
+  if(pct >= 90){
+    document.getElementById('emoji').textContent = '🏆';
+    message = 'Amazing work! You are showing FAST mastery.';
+  }else if(pct >= 70){
+    document.getElementById('emoji').textContent = '⭐';
+    message = 'Good job! Keep practicing to become even stronger.';
+  }else{
+    document.getElementById('emoji').textContent = '💪';
+    message = 'Keep practicing. Every try helps you improve.';
+  }
+
+  document.getElementById('message').textContent = message;
+
+  submitResult(correct,total,pct);
+}
+
+async function submitResult(correct,total,pct){
+  const status = document.getElementById('saveStatus');
+
+  const fullName = `${studentInfo.firstName} ${studentInfo.lastName}`;
+  const isMockTest = currentTestMode.toLowerCase().includes('mock');
+
+  const resultToSave = {
+    first_name: studentInfo.firstName,
+    last_name: studentInfo.lastName,
+    student_name: fullName,
+    student_id: studentInfo.studentId,
+    class_code: studentInfo.classCode,
+    test_mode: currentTestMode,
+    completion_type: isMockTest ? 'test' : 'practice',
+    completed: true,
+    attempt_number: isMockTest ? 1 : null,
+    score: `${correct}/${total}`,
+    percent: pct,
+    questions_total: total,
+    correct: correct,
+    best_score: pct,
+    created_at: new Date().toISOString()
+  };
+
+  if(!hasSupabase){
+    const localResults = JSON.parse(localStorage.getItem('fastMath3Results') || '[]');
+    localResults.push(resultToSave);
+    localStorage.setItem('fastMath3Results', JSON.stringify(localResults));
+
+    status.className = 'save-status good';
+    status.textContent = 'Result saved locally. Supabase is not connected yet.';
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from('test_results')
+    .insert([resultToSave]);
+
+  if(error){
+    status.className = 'save-status bad';
+    status.textContent = 'Error saving result.';
+    return;
+  }
+
+  status.className = 'save-status good';
+  status.textContent = 'Result saved successfully.';
+}
+
+function shuffleArray(arr){
+  return arr
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a,b) => a.sort - b.sort)
+    .map(({ value }) => value);
+}
+</script>
+
+</body>
+</html>
